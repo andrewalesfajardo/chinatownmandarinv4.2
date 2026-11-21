@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChinaTown Mandarin v4.2 — Traditional Mandarin Trainer</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23F5CA3D'/%3E%3Crect x='11' y='11' width='42' height='42' rx='7' fill='none' stroke='%23111111' stroke-width='4.5'/%3E%3Crect x='19.5' y='21.5' width='25' height='19' rx='3.5' fill='none' stroke='%23111111' stroke-width='4.5'/%3E%3Cline x1='32' y1='15.5' x2='32' y2='48.5' stroke='%23111111' stroke-width='4.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Core Brand Anchors */
+      --gold: #F5CA3D;            /* gold-500: Primary Gold — logo, active controls, primary CTA */
+      --gold-hover: #E8B923;      /* gold-600: Deeper Gold — hover / active state only */
+      --antique-gold: #C9A227;    /* gold-700: Antique Gold */
+      --gold-text: #7A651E;       /* gold-900: Text-safe gold on light backgrounds (AA 5:1) */
+      --gold-50: #F6F2E6;
+      --gold-100: #F2ECD7;
+      --gold-200: #EDE0B6;
+      --gold-300: #ECD791;
+
+      --near-black: #111111;      /* Primary ink & strong structural contrast */
+      --off-white: #EFEDE6;       /* Card and panel surface */
+      --off-white-2: #FAFAF8;     /* Primary page background */
+
+      /* Neutral / Gray Scale */
+      --gray-50: #FAF9F6;
+      --gray-100: #F3F1EC;
+      --rule-gray: #E3E1D9;       /* gray-200: Default border / divider */
+      --gray-300: #CFCCC2;        /* Stronger divider / table row separators */
+      --gray-400: #ADA9A0;
+      --muted-gray: #8A8A8A;      /* gray-500: Meta text, timestamps, footnotes */
+      --gray-600: #737373;        /* Secondary icon color, inactive tab labels */
+      --body-gray: #444444;       /* gray-800: Default body copy on light surfaces */
+
+      /* Secondary & Status Scales */
+      --navy: #0F1C2E;            /* blue-900: Deep Navy */
+      --precise-blue: #3D5A80;    /* blue-500: Secondary text, labels, inactive UI */
+      --blue-50: #DFE5EC;
+      --blue-100: #CCD5E1;
+      --blue-200: #A5B6CD;
+
+      --muted-forest: #1E3A2F;    /* green-800: Positive totals & strong text */
+      --green-500: #57967D;       /* Positive inline accent */
+      --green-100: #D2E1DB;       /* Positive chip fill */
+      --green-50: #E1EBE7;
+
+      --red-600: #9E2B2B;         /* Negative totals & destructive actions */
+      --red-500: #C03939;         /* Negative inline accent */
+      --red-100: #ECCECE;         /* Negative chip fill */
+      --red-50: #F2DFDF;
+
+      --amber-500: #E08E14;       /* Risk Amber: warning signals & review indicators */
+      --amber-600: #C27510;
+      --amber-100: #F8E4C0;
+      --amber-50: #FBF0DE;
+
+      /* Semantic Tokens */
+      --color-primary-action: var(--gold);
+      --color-primary-hover: var(--gold-hover);
+      --color-primary-pressed: var(--gold-hover);
+      --color-primary-disabled: var(--gold-300);
+      --color-primary-text: var(--gold-text);
+      --color-positive-inline: var(--green-500);
+      --color-positive-total: var(--muted-forest);
+      --color-negative-inline: var(--red-500);
+      --color-negative-total: var(--red-600);
+      --color-warning: var(--amber-500);
+      --color-info-text: var(--precise-blue);
+      --color-neutral-text: var(--body-gray);
+      --color-neutral-meta: var(--muted-gray);
+      --color-border: var(--rule-gray);
+      --color-focus-ring: var(--gold);
+
+      /* Typography */
+      --font-logo: 'Bebas Neue', sans-serif;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-kai: "DFKai-SB", "BiauKai", "BiauKaiTC", "Kaiti TC", "STKaiti", "AR PL UKai TW", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-ui);
+      background: var(--off-white-2);
+      color: var(--near-black);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--color-focus-ring);
+      outline-offset: 2px;
+    }
+
+    .zh {
+      font-family: var(--font-kai);
+      letter-spacing: 0.02em;
+    }
+
+    /* Header */
+    .topbar {
+      background: var(--off-white-2);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 24px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Clean Geometric Vector Logo Mark */
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      background: var(--color-primary-action);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .brand-mark svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .brand h1 {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: var(--gold-100);
+      color: var(--gold-text);
+      border: 1px solid var(--gold-300);
+      vertical-align: middle;
+    }
+
+    .brand-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-primary-text);
+      margin-bottom: 2px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.45rem;
+      line-height: 1.15;
+      color: var(--near-black);
+    }
+
+    .brand-rule {
+      width: 40px;
+      height: 3px;
+      background: var(--gold);
+      margin-top: 6px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .audio-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-100);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 5px 10px;
+    }
+
+    .audio-bar select {
+      border: none;
+      background: transparent;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--near-black);
+      max-width: 195px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-sm {
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      color: var(--near-black);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .btn-sm:hover {
+      background: var(--gray-100);
+      border-color: var(--near-black);
+    }
+
+    .audio-status {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 8px 24px 12px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: var(--color-neutral-meta);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-weight: 600;
+      background: var(--green-100);
+      color: var(--color-positive-total);
+    }
+
+    .status-pill.fallback {
+      background: var(--amber-100);
+      color: var(--near-black);
+      border: 1px solid var(--amber-500);
+    }
+
+    .shortcut-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      color: var(--color-neutral-text);
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 1px 6px;
+      font-size: 0.72rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--near-black);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-radius: 3px;
+    }
+
+    .audio-btn kbd {
+      background: rgba(17, 17, 17, 0.12);
+      border-color: rgba(17, 17, 17, 0.28);
+      color: var(--near-black);
+    }
+
+    .audio-btn.secondary kbd {
+      background: var(--gray-100);
+      border-color: var(--gray-300);
+      color: var(--color-neutral-text);
+    }
+
+    .primary-btn kbd {
+      background: rgba(17, 17, 17, 0.12);
+      border-color: rgba(17, 17, 17, 0.28);
+      color: var(--near-black);
+    }
+
+    /* Main Layout */
+    .main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Chapter & Mode Navigation */
+    .controls-panel {
+      background: var(--off-white);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      color: var(--color-neutral-text);
+      padding: 7px 14px;
+      border-radius: 3px;
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .pill:hover {
+      border-color: var(--near-black);
+      color: var(--near-black);
+    }
+
+    .pill.active {
+      background: var(--color-primary-action);
+      color: var(--near-black);
+      border-color: var(--color-primary-action);
+      font-weight: 700;
+    }
+
+    .pill.active:hover {
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    .mode-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mode-tab {
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      color: var(--gray-600);
+      padding: 8px 14px;
+      border-radius: 3px;
+      font-family: var(--font-ui);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .mode-tab:hover {
+      color: var(--near-black);
+      border-color: var(--near-black);
+    }
+
+    .mode-tab.active {
+      background: var(--near-black);
+      color: var(--gold);
+      border-color: var(--near-black);
+    }
+
+    /* Stats Strip */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      background: var(--off-white);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 14px 18px;
+    }
+
+    .stat-box .label {
+      font-size: 0.72rem;
+      color: var(--color-neutral-meta);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    .stat-box .val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--near-black);
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-box .sub {
+      font-size: 0.75rem;
+      color: var(--color-neutral-meta);
+      margin-top: 2px;
+    }
+
+    /* Quiz Card */
+    .card {
+      background: var(--off-white);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 28px;
+    }
+
+    .quiz-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .quiz-meta-left {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      padding: 4px 10px;
+      border-radius: 3px;
+      background: var(--gold-100);
+      color: var(--color-primary-text);
+      border: 1px solid var(--gold-200);
+    }
+
+    .tag.neutral {
+      background: var(--blue-50);
+      color: var(--color-info-text);
+      border-color: var(--blue-200);
+    }
+
+    .quiz-size-select {
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      color: var(--near-black);
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .prompt-area {
+      text-align: center;
+      padding: 28px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background: var(--off-white-2);
+      margin-bottom: 22px;
+    }
+
+    .big-char {
+      font-size: clamp(64px, 11vw, 108px);
+      line-height: 1.15;
+      margin: 4px 0 10px;
+      color: var(--near-black);
+      user-select: all;
+    }
+
+    .big-meaning {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      margin: 12px 0;
+      color: var(--near-black);
+    }
+
+    .hint-line {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-primary-text);
+      margin-bottom: 14px;
+    }
+
+    /* Listen -> Tone Prompt Styling */
+    .tone-listen-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--gold-100);
+      border: 2px solid var(--gold);
+      font-size: 2.1rem;
+      margin: 6px auto 12px;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.14s ease;
+    }
+
+    .tone-listen-badge:hover {
+      background: var(--gold);
+      transform: scale(1.04);
+    }
+
+    .tone-pinyin-word {
+      display: inline-block;
+      margin: 4px auto 10px;
+      padding: 6px 20px;
+      border-radius: 4px;
+      background: var(--gold-100);
+      border: 1px solid var(--gold-200);
+      font-family: var(--font-ui);
+      font-size: clamp(26px, 4.2vw, 38px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--near-black);
+    }
+
+    .tone-listen-title {
+      font-family: var(--font-display);
+      font-size: clamp(21px, 3.4vw, 28px);
+      font-weight: 700;
+      color: var(--near-black);
+      margin: 2px 0 6px;
+    }
+
+    .tone-listen-sub {
+      font-size: 0.88rem;
+      color: var(--color-neutral-meta);
+      margin-bottom: 8px;
+    }
+
+    .tone-contour-svg {
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+      color: currentColor;
+    }
+
+    .tone-opt-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .tone-opt-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tone-mark-pill {
+      display: inline-block;
+      padding: 0 7px;
+      border-radius: 3px;
+      background: var(--gold-100);
+      color: var(--color-primary-text);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .tone-opt-desc {
+      font-size: 0.8rem;
+      color: var(--color-neutral-meta);
+    }
+
+    .option-btn.correct .tone-opt-desc,
+    .option-btn.wrong .tone-opt-desc {
+      color: inherit;
+      opacity: 0.88;
+    }
+
+    .audio-controls-row {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .audio-btn {
+      border: 1px solid var(--color-primary-action);
+      background: var(--color-primary-action);
+      color: var(--near-black);
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .audio-btn:hover {
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    .audio-btn.speaking {
+      background: var(--muted-forest);
+      border-color: var(--muted-forest);
+      color: var(--off-white-2);
+    }
+
+    .audio-btn.speaking kbd {
+      background: rgba(250, 250, 248, 0.18);
+      border-color: rgba(250, 250, 248, 0.35);
+      color: var(--off-white-2);
+    }
+
+    .audio-btn.secondary {
+      background: var(--off-white-2);
+      color: var(--near-black);
+      border: 1px solid var(--gray-300);
+    }
+
+    .audio-btn.secondary:hover {
+      border-color: var(--near-black);
+      background: var(--gray-100);
+    }
+
+    .audio-btn.secondary.speaking {
+      background: var(--green-100);
+      color: var(--color-positive-total);
+      border-color: var(--color-positive-total);
+    }
+
+    /* Options Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .options-grid.tone-five-grid {
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+    }
+
+    .option-btn {
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      border-radius: 4px;
+      padding: 16px 18px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.12s ease, background 0.12s ease;
+      font-family: var(--font-ui);
+      font-size: 0.98rem;
+      color: var(--near-black);
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--near-black);
+      background: var(--gold-50);
+    }
+
+    .option-btn .key {
+      width: 28px;
+      height: 28px;
+      border-radius: 3px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-neutral-text);
+      flex-shrink: 0;
+    }
+
+    .option-btn .opt-zh {
+      font-size: 2rem;
+      line-height: 1.1;
+    }
+
+    .option-btn.correct {
+      border: 2px solid var(--color-positive-total);
+      background: var(--green-100);
+      color: var(--color-positive-total);
+    }
+
+    .option-btn.correct .key {
+      background: var(--color-positive-total);
+      border-color: var(--color-positive-total);
+      color: var(--off-white-2);
+    }
+
+    .option-btn.wrong {
+      border: 2px solid var(--color-negative-total);
+      background: var(--red-100);
+      color: var(--color-negative-total);
+    }
+
+    .option-btn.wrong .key {
+      background: var(--color-negative-total);
+      border-color: var(--color-negative-total);
+      color: var(--off-white-2);
+    }
+
+    /* Feedback Box */
+    .feedback-box {
+      margin-top: 20px;
+      border-radius: 4px;
+      padding: 18px 20px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      display: none;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .sentence-card {
+      background: var(--off-white-2);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sentence-zh {
+      font-size: 1.45rem;
+      color: var(--near-black);
+      margin-bottom: 2px;
+    }
+
+    .sentence-py {
+      font-size: 0.9rem;
+      color: var(--color-primary-text);
+      font-weight: 600;
+    }
+
+    .sentence-en {
+      font-size: 0.9rem;
+      color: var(--color-neutral-text);
+    }
+
+    .next-row {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .primary-btn {
+      border: 1px solid var(--color-primary-action);
+      background: var(--color-primary-action);
+      color: var(--near-black);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .primary-btn:hover {
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    /* Quiz Summary View */
+    .summary-panel {
+      background: var(--off-white-2);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 28px 24px;
+    }
+
+    .summary-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 18px;
+    }
+
+    .summary-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin: 4px 0 0 0;
+      color: var(--near-black);
+    }
+
+    .summary-score-box {
+      text-align: right;
+    }
+
+    .summary-score-num {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--near-black);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--off-white);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 3px;
+    }
+
+    .result-badge.pass {
+      background: var(--green-100);
+      color: var(--color-positive-total);
+    }
+
+    .result-badge.miss {
+      background: var(--red-100);
+      color: var(--color-negative-total);
+    }
+
+    /* Dictionary Table */
+    .search-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 14px;
+      border: 1px solid var(--gray-300);
+      background: var(--off-white-2);
+      color: var(--near-black);
+      border-radius: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.92rem;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background: var(--off-white-2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--color-border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--gray-100);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-neutral-meta);
+      border-bottom: 1px solid var(--gray-300);
+    }
+
+    tr:hover td {
+      background: var(--gray-50);
+    }
+
+    .td-zh {
+      font-size: 1.65rem;
+      color: var(--near-black);
+      white-space: nowrap;
+    }
+
+
+    /* About Modal Overlay (Option A) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(17, 17, 17, 0.52);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.hidden {
+      display: none !important;
+    }
+
+    .modal-card {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      background: var(--off-white-2);
+      border: 1px solid var(--color-border);
+      border-top: 4px solid var(--gold);
+      border-radius: 8px;
+      padding: 26px 28px 24px;
+      box-shadow: 0 18px 40px rgba(17, 17, 17, 0.22);
+      animation: modalFadeIn 0.14s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(6px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background: var(--gray-50);
+      color: var(--near-black);
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--gray-100);
+      border-color: var(--near-black);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-right: 32px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.28rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--near-black);
+    }
+
+    .modal-body {
+      margin: 0 0 20px;
+      font-size: 0.94rem;
+      line-height: 1.65;
+      color: var(--body-gray);
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .btn-linkedin-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 5px;
+      background: var(--color-primary-action);
+      color: var(--near-black);
+      border: 1px solid var(--antique-gold);
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.12s ease, transform 0.08s ease;
+    }
+
+    .btn-linkedin-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn-linkedin-primary:active {
+      transform: translateY(1px);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <rect width="64" height="64" rx="6" fill="#F5CA3D" />
+            <rect x="11" y="11" width="42" height="42" rx="7" fill="none" stroke="#111111" stroke-width="4.5" />
+            <rect x="19.5" y="21.5" width="25" height="19" rx="3.5" fill="none" stroke="#111111" stroke-width="4.5" />
+            <line x1="32" y1="15.5" x2="32" y2="48.5" stroke="#111111" stroke-width="4.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-eyebrow">Traditional Mandarin Vocabulary &amp; Audio</div>
+          <h1>ChinaTown Mandarin <span class="version-badge">v4.2</span></h1>
+          <div class="brand-rule"></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <!-- Audio Controls -->
+        <div class="audio-bar">
+          <select id="voiceSelect" title="Select Mandarin Voice" aria-label="Select Mandarin Voice"></select>
+          <button type="button" id="btnTestAudio" class="btn-sm" onclick="testAudio()">🔊 Test Sound</button>
+        </div>
+        <button type="button" id="btnAbout" class="btn-sm" onclick="openAboutModal()" aria-haspopup="dialog" aria-controls="aboutModal">About</button>
+      </div>
+    </div>
+    <div class="audio-status">
+      <span id="audioStatusPill" class="status-pill">Checking audio engine...</span>
+      <div class="shortcut-strip">
+        <span><kbd id="shortcutKeyRange">1–4</kbd> Answer</span>
+        <span>•</span>
+        <span><kbd>↑</kbd> / <kbd>A</kbd> Hear Word</span>
+        <span>•</span>
+        <span><kbd>↓</kbd> / <kbd>S</kbd> Hear Sentence</span>
+        <span>•</span>
+        <span><kbd>Space</kbd> / <kbd>→</kbd> Next Question</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Chapter & Mode Navigation -->
+    <section class="controls-panel" aria-label="Topic and Mode Selection">
+      <div class="pill-group" id="chapterPills"></div>
+      <div class="mode-tabs">
+        <button type="button" class="mode-tab active" data-mode="zh2en" onclick="setMode('zh2en')">Character → Meaning</button>
+        <button type="button" class="mode-tab" data-mode="en2zh" onclick="setMode('en2zh')">Meaning → Character</button>
+        <button type="button" class="mode-tab" data-mode="tone" onclick="setMode('tone')">Listen → Tone</button>
+        <button type="button" class="mode-tab" data-mode="dict" onclick="setMode('dict')">All 385 Words</button>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-strip" aria-label="Session Statistics">
+      <div class="stat-box">
+        <div class="label">Topic Pool</div>
+        <div class="val" id="statDeck">385</div>
+        <div class="sub" id="statQuizCap">10-question random quiz</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Quiz Progress</div>
+        <div class="val" id="statProgress">1 / 10</div>
+        <div class="sub">Current round</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Mastered</div>
+        <div class="val" id="statMastered" style="color: var(--color-positive-total);">0</div>
+        <div class="sub">Saved across sessions</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Needs Review</div>
+        <div class="val" id="statReview" style="color: var(--amber-600);">0</div>
+        <div class="sub">Flagged or missed</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Round Score</div>
+        <div class="val" id="statScore">0 / 0</div>
+        <div class="sub">Correct answers</div>
+      </div>
+    </section>
+
+    <!-- QUIZ VIEW -->
+    <section id="viewQuiz" class="card">
+      <div id="quizActiveContainer">
+        <div class="quiz-top">
+          <div class="quiz-meta-left">
+            <span class="tag" id="quizProgressTag">Question 1 of 10</span>
+            <span class="tag neutral" id="quizChapterTag">Lesson</span>
+            <span class="tag neutral" id="quizPosTag">noun</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <label id="pinyinHintWrap" style="font-size:0.82rem; font-weight:500; color:var(--color-neutral-text); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="togglePinyinHint" onchange="renderQuiz()" /> Show Pinyin Hint
+            </label>
+            <label id="tonePinyinWrap" class="hidden" style="font-size:0.82rem; font-weight:500; color:var(--color-neutral-text); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="toggleTonePinyin" checked onchange="renderQuiz()" /> Show Pinyin (No Tone)
+            </label>
+            <label id="toneCharHintWrap" class="hidden" style="font-size:0.82rem; font-weight:500; color:var(--color-neutral-text); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="toggleToneCharHint" onchange="renderQuiz()" /> Show Character Hint
+            </label>
+            <label id="toneAutoPlayWrap" class="hidden" style="font-size:0.82rem; font-weight:500; color:var(--color-neutral-text); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="toggleAutoPlayTone" checked /> Auto-play Audio
+            </label>
+            <select id="toneScopeSelect" class="quiz-size-select hidden" title="Tone quiz scope" aria-label="Tone quiz scope" onchange="startNewQuiz()">
+              <option value="single" selected>Single Syllables (1st–4th / Neutral)</option>
+              <option value="all">All Words (Tone Patterns)</option>
+            </select>
+            <select id="quizSizeSelect" class="quiz-size-select" title="Questions per quiz" aria-label="Questions per quiz" onchange="changeQuizSize()">
+              <option value="10" selected>10 Questions (Default)</option>
+              <option value="20">20 Questions</option>
+              <option value="ALL">All Topic Words</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="prompt-area">
+          <div id="quizPromptContent"></div>
+          <div class="audio-controls-row">
+            <button type="button" id="btnPlayWord" class="audio-btn" onclick="speakCurrentWord()">
+              🔊 Hear Word <kbd>↑</kbd> / <kbd>A</kbd>
+            </button>
+            <button type="button" id="btnPromptSentence" class="audio-btn secondary" onclick="speakCurrentSentence()">
+              🔊 Hear Sentence <kbd>↓</kbd> / <kbd>S</kbd>
+            </button>
+          </div>
+        </div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <div class="feedback-box" id="feedbackBox">
+          <div class="feedback-header">
+            <div class="feedback-title" id="feedbackTitle"></div>
+            <div id="feedbackMeta" style="font-size:0.88rem; font-weight:500; color:var(--color-neutral-text);"></div>
+          </div>
+          <div class="sentence-card">
+            <div>
+              <div class="sentence-zh zh" lang="zh-TW" id="fbSentenceZh"></div>
+              <div class="sentence-py" id="fbSentencePy"></div>
+              <div class="sentence-en" id="fbSentenceEn"></div>
+            </div>
+            <button type="button" id="btnPlaySentence" class="audio-btn secondary" onclick="speakCurrentSentence()">
+              🔊 Hear Sentence <kbd>↓</kbd> / <kbd>S</kbd>
+            </button>
+          </div>
+          <div class="next-row">
+            <button type="button" id="btnFlagReview" class="btn-sm" onclick="markNeedsReview()">Flag for Review</button>
+            <button type="button" id="btnNextQuestion" class="primary-btn" onclick="nextQuestion()">
+              Next Question <kbd>Space</kbd> / <kbd>→</kbd>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ COMPLETE SUMMARY -->
+      <div id="quizSummaryContainer" class="summary-panel hidden">
+        <div class="summary-header">
+          <div>
+            <div class="brand-eyebrow" id="summaryTopicLabel">All Chapters</div>
+            <h2>Quiz Round Complete</h2>
+          </div>
+          <div class="summary-score-box">
+            <div class="summary-score-num" id="summaryScoreNum">0 / 10</div>
+            <div style="font-size:0.82rem; color:var(--color-neutral-meta);" id="summaryScorePct">0% Accuracy</div>
+          </div>
+        </div>
+        <div class="summary-list" id="summaryList"></div>
+        <div class="next-row">
+          <button type="button" class="primary-btn" onclick="startNewQuiz()">
+            Start New Random Quiz <kbd>Space</kbd> / <kbd>→</kbd>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DICTIONARY TABLE VIEW -->
+    <section id="viewDict" class="card hidden">
+      <div class="search-bar">
+        <input type="text" id="dictSearch" placeholder="Search character (載具), Pinyin (zaiju), or English (mobile barcode)..." oninput="renderDict()" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Audio</th>
+              <th>Character</th>
+              <th>Pinyin</th>
+              <th>Phonetic</th>
+              <th>Meaning</th>
+              <th>Chapter</th>
+              <th>Example Sentence</th>
+            </tr>
+          </thead>
+          <tbody id="dictBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- About Modal Overlay -->
+  <div id="aboutModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle" onclick="handleAboutBackdropClick(event)">
+    <div class="modal-card">
+      <button type="button" id="btnCloseAbout" class="modal-close-btn" aria-label="Close About dialog" onclick="closeAboutModal()">&times;</button>
+      <div class="modal-header">
+        <div class="brand-mark" style="width:38px; height:38px;" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <rect width="64" height="64" rx="6" fill="#F5CA3D" />
+            <rect x="11" y="11" width="42" height="42" rx="7" fill="none" stroke="#111111" stroke-width="4.5" />
+            <rect x="19.5" y="21.5" width="25" height="19" rx="3.5" fill="none" stroke="#111111" stroke-width="4.5" />
+            <line x1="32" y1="15.5" x2="32" y2="48.5" stroke="#111111" stroke-width="4.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-eyebrow" style="margin-bottom:2px;">About ChinaTown Mandarin v4.2</div>
+          <h2 id="aboutModalTitle">Built for Traditional Mandarin Learners</h2>
+        </div>
+      </div>
+      <p class="modal-body">
+        Hi! I'm Drew, an IMBA student at National Chengchi University (NCCU). I created ChinaTown Mandarin to help non-native Chinese speakers learn Traditional Mandarin faster—turning vocabulary, character recognition, and tone training into fun, interactive games rather than rote memorization.
+      </p>
+      <div class="modal-actions">
+        <a href="https://www.linkedin.com/in/andrewalesfajardo/" target="_blank" rel="noopener noreferrer" class="btn-linkedin-primary">
+          Connect on LinkedIn ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB = [{"id": 1, "py": "Fang", "pyT": "Fāng", "ph": "fahng", "zh": "方", "en": "square", "pos": "noun", "sPy": "wo xing Fang", "sPyT": "Wǒ xìng Fāng.", "sZh": "我姓方。", "sEn": "My surname is Fang.", "ch": "Lesson"}, {"id": 2, "py": "Du", "pyT": "Dù", "ph": "doo", "zh": "度", "en": "to stop", "pos": "verb", "sPy": "wo jiao Fang Durui", "sPyT": "Wǒ jiào Fāng Dùruì.", "sZh": "我叫方度瑞。", "sEn": "My name is Fang Durui.", "ch": "Lesson"}, {"id": 3, "py": "Rui", "pyT": "Ruì", "ph": "rway", "zh": "瑞", "en": "lucky", "pos": "state verb", "sPy": "wo jiao Fang Durui", "sPyT": "Wǒ jiào Fāng Dùruì.", "sZh": "我叫方度瑞。", "sEn": "My name is Fang Durui.", "ch": "Lesson"}, {"id": 4, "py": "wo", "pyT": "wǒ", "ph": "wwoh", "zh": "我", "en": "I'm", "pos": "pronoun", "sPy": "wo shi xue sheng", "sPyT": "Wǒ shì xuéshēng.", "sZh": "我是學生。", "sEn": "I am a student.", "ch": "Lesson"}, {"id": 5, "py": "shi", "pyT": "shì", "ph": "shir", "zh": "是", "en": "is, am or are", "pos": "verb", "sPy": "ta shi wo de lao shi", "sPyT": "Tā shì wǒ de lǎoshī.", "sZh": "他是我的老師。", "sEn": "He is my teacher.", "ch": "Lesson"}, {"id": 6, "py": "ta", "pyT": "tā", "ph": "tah", "zh": "他", "en": "he", "pos": "pronoun", "sPy": "ta shi nan sheng", "sPyT": "Tā shì nánshēng.", "sZh": "他是男生。", "sEn": "He is a man / boy.", "ch": "Lesson"}, {"id": 7, "py": "ta", "pyT": "tā", "ph": "tah", "zh": "她", "en": "she", "pos": "pronoun", "sPy": "ta shi nu sheng", "sPyT": "Tā shì nǚshēng.", "sZh": "她是女生。", "sEn": "She is a woman / girl.", "ch": "Lesson"}, {"id": 8, "py": "Fei lu bin", "pyT": "Fēilǜbīn", "ph": "fay-lyoo-bin", "zh": "菲律賓", "en": "Philippines", "pos": "noun", "sPy": "wo shi Fei lu bin ren", "sPyT": "Wǒ shì Fēilǜbīn rén.", "sZh": "我是菲律賓人。", "sEn": "I am Filipino.", "ch": "Lesson"}, {"id": 9, "py": "nan sheng", "pyT": "nánshēng", "ph": "nahn-shung", "zh": "男生", "en": "man", "pos": "noun", "sPy": "na ge nan sheng shi wo gege", "sPyT": "Nà ge nánshēng shì wǒ gēge.", "sZh": "那個男生是我哥哥。", "sEn": "That guy is my older brother.", "ch": "Lesson"}, {"id": 10, "py": "nu sheng", "pyT": "nǚshēng", "ph": "nyoo-shung", "zh": "女生", "en": "woman", "pos": "noun", "sPy": "zhe ge nu sheng hen piaoliang", "sPyT": "Zhè ge nǚshēng hěn piàoliàng.", "sZh": "這個女生很漂亮。", "sEn": "This girl is very pretty.", "ch": "Lesson"}, {"id": 11, "py": "xi huan", "pyT": "xǐhuān", "ph": "shee-hwahn", "zh": "喜歡", "en": "like", "pos": "verb", "sPy": "wo xi huan he cha", "sPyT": "Wǒ xǐhuān hē chá.", "sZh": "我喜歡喝茶。", "sEn": "I like drinking tea.", "ch": "Lesson"}, {"id": 12, "py": "bu xihuan", "pyT": "bù xǐhuān", "ph": "boo shee-hwahn", "zh": "不喜歡", "en": "do not like", "pos": "phrase", "sPy": "wo bu xihuan he jiu", "sPyT": "Wǒ bù xǐhuān hē jiǔ.", "sZh": "我不喜歡喝酒。", "sEn": "I do not like drinking alcohol.", "ch": "Lesson"}, {"id": 13, "py": "tai wan", "pyT": "Táiwān", "ph": "tai-wahn", "zh": "台灣", "en": "Taiwan", "pos": "noun", "sPy": "Taiwan hen haowan", "sPyT": "Táiwān hěn hǎowán.", "sZh": "台灣很好玩。", "sEn": "Taiwan is very fun.", "ch": "Lesson"}, {"id": 14, "py": "ma", "pyT": "ma", "ph": "mah", "zh": "嗎", "en": "a yes or no question", "pos": "particle", "sPy": "ni xi huan Taiwan ma", "sPyT": "Nǐ xǐhuān Táiwān ma?", "sZh": "你喜歡台灣嗎？", "sEn": "Do you like Taiwan?", "ch": "Lesson"}, {"id": 15, "py": "ni ne", "pyT": "nǐ ne", "ph": "nee nuh", "zh": "你呢", "en": "and you?", "pos": "phrase", "sPy": "wo hen hao, ni ne", "sPyT": "Wǒ hěn hǎo, nǐ ne?", "sZh": "我很好，你呢？", "sEn": "I am very well, and you?", "ch": "Lesson"}, {"id": 16, "py": "bao", "pyT": "bào", "ph": "baow", "zh": "報", "en": "newspaper", "pos": "noun", "sPy": "baba xi huan kan bao", "sPyT": "Bàba xǐhuān kàn bào.", "sZh": "爸爸喜歡看報。", "sEn": "Dad likes reading the newspaper.", "ch": "Lesson"}, {"id": 17, "py": "bao", "pyT": "bào", "ph": "baow", "zh": "抱", "en": "to hug", "pos": "verb", "sPy": "mama bao zhe haizi", "sPyT": "Māma bào zhe háizi.", "sZh": "媽媽抱著孩子。", "sEn": "Mom is hugging the child.", "ch": "Lesson"}, {"id": 18, "py": "dou", "pyT": "dòu", "ph": "doh", "zh": "豆", "en": "beans", "pos": "noun", "sPy": "wo xi huan chi dou", "sPyT": "Wǒ xǐhuān chī dòu.", "sZh": "我喜歡吃豆。", "sEn": "I like eating beans.", "ch": "Lesson"}, {"id": 19, "py": "zhu", "pyT": "zhū", "ph": "joo", "zh": "豬", "en": "pig", "pos": "noun", "sPy": "zhe zhi zhu hen pang", "sPyT": "Zhè zhī zhū hěn pàng.", "sZh": "這隻豬很胖。", "sEn": "This pig is very fat.", "ch": "Lesson"}, {"id": 20, "py": "hao le ma", "pyT": "hǎo le ma", "ph": "haow luh mah", "zh": "好了嗎", "en": "finished?", "pos": "phrase", "sPy": "ni de gong ke hao le ma", "sPyT": "Nǐ de gōngkè hǎo le ma?", "sZh": "你的功課好了嗎？", "sEn": "Is your homework finished?", "ch": "Lesson"}, {"id": 21, "py": "hao le", "pyT": "hǎo le", "ph": "haow luh", "zh": "好了", "en": "finished!", "pos": "phrase", "sPy": "wo de gong ke hao le", "sPyT": "Wǒ de gōngkè hǎo le!", "sZh": "我的功課好了！", "sEn": "My homework is finished!", "ch": "Lesson"}, {"id": 22, "py": "hai mei", "pyT": "hái méi", "ph": "hai may", "zh": "還沒", "en": "not yet", "pos": "adverb", "sPy": "wo hai mei chi fan", "sPyT": "Wǒ hái méi chī fàn.", "sZh": "我還沒吃飯。", "sEn": "I haven't eaten yet.", "ch": "Lesson"}, {"id": 23, "py": "xiu xi", "pyT": "xiūxí", "ph": "shyoh-shee", "zh": "休息", "en": "take", "pos": "verb", "sPy": "wo men xiu xi shi fen zhong", "sPyT": "Wǒmen xiūxí shí fēnzhōng.", "sZh": "我們休息十分鐘。", "sEn": "Let's rest for ten minutes.", "ch": "Lesson"}, {"id": 24, "py": "fen zhong", "pyT": "fēnzhōng", "ph": "fun-johng", "zh": "分鐘", "en": "minute", "pos": "noun", "sPy": "qing deng wo wu fen zhong", "sPyT": "Qǐng děng wǒ wǔ fēnzhōng.", "sZh": "請等我五分鐘。", "sEn": "Please wait for me for five minutes.", "ch": "Lesson"}, {"id": 25, "py": "jin tian", "pyT": "jīntiān", "ph": "jin-tyen", "zh": "今天", "en": "today", "pos": "noun", "sPy": "jin tian shi xing qi ji", "sPyT": "Jīntiān shì xīngqí jǐ?", "sZh": "今天是星期幾？", "sEn": "what day is today", "ch": "Lesson"}, {"id": 26, "py": "zuo tian", "pyT": "zuótiān", "ph": "dzwoh-tyen", "zh": "昨天", "en": "yesterday", "pos": "noun", "sPy": "zuo tian shi xing qi ji", "sPyT": "Zuótiān shì xīngqí jǐ?", "sZh": "昨天是星期幾？", "sEn": "what day is yesterday", "ch": "Lesson"}, {"id": 27, "py": "ming tian", "pyT": "míngtiān", "ph": "ming-tyen", "zh": "明天", "en": "tomorrow", "pos": "noun", "sPy": "ming tian shi xing qi ji", "sPyT": "Míngtiān shì xīngqí jǐ?", "sZh": "明天是星期幾？", "sEn": "what day is tomorrow", "ch": "Lesson"}, {"id": 28, "py": "de gong ke", "pyT": "de gōngkè", "ph": "duh gohng-kuh", "zh": "的功課", "en": "homework", "pos": "noun", "sPy": "jin tian de gong ke hen duo", "sPyT": "Jīntiān de gōngkè hěn duō.", "sZh": "今天的功課很多。", "sEn": "Today's homework is a lot.", "ch": "Lesson"}, {"id": 29, "py": "kao shi", "pyT": "kǎoshì", "ph": "kaow-shir", "zh": "考試", "en": "test", "pos": "noun", "sPy": "ming tian you kao shi", "sPyT": "Míngtiān yǒu kǎoshì.", "sZh": "明天有考試。", "sEn": "There is a test tomorrow.", "ch": "Lesson"}, {"id": 30, "py": "ting xie", "pyT": "tīngxiě", "ph": "ting-shyeh", "zh": "聽寫", "en": "dictation", "pos": "noun", "sPy": "jin tian you ting xie ma", "sPyT": "Jīntiān yǒu tīngxiě ma?", "sZh": "今天有聽寫嗎？", "sEn": "Is there dictation today?", "ch": "Lesson"}, {"id": 31, "py": "ni hao", "pyT": "nǐ hǎo", "ph": "nee haow", "zh": "你好", "en": "hi or hello", "pos": "phrase", "sPy": "ni hao, qing wen ni gui xing", "sPyT": "Nǐ hǎo, qǐngwèn nín guì xìng?", "sZh": "你好，請問您貴姓？", "sEn": "Hello, may I ask your surname?", "ch": "Lesson"}, {"id": 32, "py": "deng yi xia", "pyT": "děng yīxià", "ph": "dung ee-shyah", "zh": "等一下", "en": "wait", "pos": "phrase", "sPy": "qing deng yi xia", "sPyT": "Qǐng děng yīxià.", "sZh": "請等一下。", "sEn": "Please wait a moment.", "ch": "Lesson"}, {"id": 33, "py": "ling", "pyT": "líng", "ph": "ling", "zh": "零", "en": "0", "pos": "numeral", "sPy": "ling kuai qian", "sPyT": "Líng kuài qián.", "sZh": "零塊錢。", "sEn": "Zero dollars.", "ch": "Lesson"}, {"id": 34, "py": "yi", "pyT": "yī", "ph": "ee", "zh": "一", "en": "1", "pos": "numeral", "sPy": "wo you yi ge gege", "sPyT": "Wǒ yǒu yī ge gēge.", "sZh": "我有一個哥哥。", "sEn": "I have one older brother.", "ch": "Lesson"}, {"id": 35, "py": "er", "pyT": "èr", "ph": "ar", "zh": "二", "en": "2", "pos": "numeral", "sPy": "er yue hen leng", "sPyT": "Èryuè hěn lěng.", "sZh": "二月很冷。", "sEn": "February is very cold.", "ch": "Lesson"}, {"id": 36, "py": "san", "pyT": "sān", "ph": "sahn", "zh": "三", "en": "3", "pos": "numeral", "sPy": "wo yao san bei ka fei", "sPyT": "Wǒ yào sān bēi kāfēi.", "sZh": "我要三杯咖啡。", "sEn": "I want three cups of coffee.", "ch": "Lesson"}, {"id": 37, "py": "si", "pyT": "sì", "ph": "suh", "zh": "四", "en": "4", "pos": "numeral", "sPy": "si yue si hao", "sPyT": "Sìyuè sì hào.", "sZh": "四月四號。", "sEn": "April 4th.", "ch": "Lesson"}, {"id": 38, "py": "wu", "pyT": "wǔ", "ph": "woo", "zh": "五", "en": "5", "pos": "numeral", "sPy": "wu shi kuai qian", "sPyT": "Wǔshí kuài qián.", "sZh": "五十塊錢。", "sEn": "Fifty dollars.", "ch": "Lesson"}, {"id": 39, "py": "liu", "pyT": "liù", "ph": "lyoh", "zh": "六", "en": "6", "pos": "numeral", "sPy": "liu yue hen re", "sPyT": "Liùyuè hěn rè.", "sZh": "六月很熱。", "sEn": "June is very hot.", "ch": "Lesson"}, {"id": 40, "py": "qi", "pyT": "qī", "ph": "chee", "zh": "七", "en": "7", "pos": "numeral", "sPy": "yi ge xing qi you qi tian", "sPyT": "Yī ge xīngqí yǒu qī tiān.", "sZh": "一個星期有七天。", "sEn": "A week has seven days.", "ch": "Lesson"}, {"id": 41, "py": "ba", "pyT": "bā", "ph": "bah", "zh": "八", "en": "8", "pos": "numeral", "sPy": "ba yue ba hao", "sPyT": "Bāyuè bā hào.", "sZh": "八月八號。", "sEn": "August 8th.", "ch": "Lesson"}, {"id": 42, "py": "jiu", "pyT": "jiǔ", "ph": "jyoh", "zh": "九", "en": "9", "pos": "numeral", "sPy": "jiu yue kai xue", "sPyT": "Jiǔyuè kāixué.", "sZh": "九月開學。", "sEn": "School starts in September.", "ch": "Lesson"}, {"id": 43, "py": "shi", "pyT": "shí", "ph": "shir", "zh": "十", "en": "10", "pos": "numeral", "sPy": "shi kuai qian", "sPyT": "Shí kuài qián.", "sZh": "十塊錢。", "sEn": "Ten dollars.", "ch": "Lesson"}, {"id": 44, "py": "bai", "pyT": "bǎi", "ph": "bai", "zh": "百", "en": "100", "pos": "numeral", "sPy": "yi bai kuai qian", "sPyT": "Yībǎi kuài qián.", "sZh": "一百塊錢。", "sEn": "One hundred dollars.", "ch": "Lesson"}, {"id": 45, "py": "qian", "pyT": "qiān", "ph": "chyen", "zh": "千", "en": "1000", "pos": "numeral", "sPy": "yi qian kuai qian", "sPyT": "Yīqiān kuài qián.", "sZh": "一千塊錢。", "sEn": "One thousand dollars.", "ch": "Lesson"}, {"id": 46, "py": "wan", "pyT": "wàn", "ph": "wahn", "zh": "萬", "en": "10000", "pos": "numeral", "sPy": "yi wan kuai qian", "sPyT": "Yīwàn kuài qián.", "sZh": "一萬塊錢。", "sEn": "Ten thousand dollars.", "ch": "Lesson"}, {"id": 47, "py": "shen me", "pyT": "shénme", "ph": "shun-muh", "zh": "什麼", "en": "what", "pos": "pronoun", "sPy": "zhe shi shen me", "sPyT": "Zhè shì shénme?", "sZh": "這是什麼？", "sEn": "What is this?", "ch": "Lesson"}, {"id": 48, "py": "chi shen me", "pyT": "chī shénme", "ph": "chir shun-muh", "zh": "吃什麼", "en": "what to eat", "pos": "phrase", "sPy": "ni xiang chi shen me", "sPyT": "Nǐ xiǎng chī shénme?", "sZh": "你想吃什麼？", "sEn": "What do you want to eat?", "ch": "Lesson"}, {"id": 49, "py": "he shen me", "pyT": "hē shénme", "ph": "huh shun-muh", "zh": "喝什麼", "en": "what to drink", "pos": "phrase", "sPy": "ni xiang he shen me", "sPyT": "Nǐ xiǎng hē shénme?", "sZh": "你想喝什麼？", "sEn": "What do you want to drink?", "ch": "Lesson"}, {"id": 50, "py": "shei", "pyT": "shéi", "ph": "shay", "zh": "誰", "en": "who", "pos": "pronoun", "sPy": "ni xi huan shei, shei xi huan Pokemon", "sPyT": "Nǐ xǐhuān shéi? Shéi xǐhuān Bǎokěmèng?", "sZh": "你喜歡誰？誰喜歡寶可夢？", "sEn": "Who do you like? Who likes Pokémon?", "ch": "Lesson"}, {"id": 51, "py": "bu zhi dao", "pyT": "bù zhīdào", "ph": "boo jir-daow", "zh": "不知道", "en": "have no idea", "pos": "phrase", "sPy": "wo bu zhi dao", "sPyT": "Wǒ bù zhīdào.", "sZh": "我不知道。", "sEn": "I have no idea / I don't know.", "ch": "Lesson"}, {"id": 52, "py": "xing", "pyT": "xìng", "ph": "shing", "zh": "姓", "en": "surname", "pos": "verb", "sPy": "xing Fang", "sPyT": "Xìng Fāng.", "sZh": "姓方。", "sEn": "Family Name is Fang", "ch": "Lesson"}, {"id": 53, "py": "jiao", "pyT": "jiào", "ph": "jyaow", "zh": "叫", "en": "name", "pos": "verb", "sPy": "jiao Fang Durui", "sPyT": "Jiào Fāng Dùruì.", "sZh": "叫方度瑞。", "sEn": "Full name is Fang Durui", "ch": "Lesson"}, {"id": 54, "py": "nin", "pyT": "nín", "ph": "nin", "zh": "您", "en": "you (formal)", "pos": "pronoun", "sPy": "nin hao, qing jin", "sPyT": "Nín hǎo, qǐng jìn.", "sZh": "您好，請進。", "sEn": "Hello (formal), please come in.", "ch": "Lesson"}, {"id": 55, "py": "gui", "pyT": "guì", "ph": "gway", "zh": "貴", "en": "honorable", "pos": "state verb", "sPy": "qing wen nin gui xing", "sPyT": "Qǐngwèn nín guì xìng?", "sZh": "請問您貴姓？", "sEn": "May I ask your honorable surname?", "ch": "Lesson"}, {"id": 56, "py": "ni", "pyT": "nǐ", "ph": "nee", "zh": "你", "en": "you", "pos": "pronoun", "sPy": "ni jiao shen me mingzi", "sPyT": "Nǐ jiào shénme míngzì?", "sZh": "你叫什麼名字？", "sEn": "What is your name?", "ch": "Lesson"}, {"id": 57, "py": "shen me", "pyT": "shénme", "ph": "shun-muh", "zh": "什麼", "en": "what", "pos": "pronoun", "sPy": "ni yao mai shen me", "sPyT": "Nǐ yào mǎi shénme?", "sZh": "你要買什麼？", "sEn": "What do you want to buy?", "ch": "Lesson"}, {"id": 58, "py": "you", "pyT": "yǒu", "ph": "yoh", "zh": "有", "en": "have", "pos": "verb", "sPy": "wo you liang zhi mao", "sPyT": "Wǒ yǒu liǎng zhī māo.", "sZh": "我有兩隻貓。", "sEn": "I have two cats.", "ch": "Lesson"}, {"id": 59, "py": "mei you", "pyT": "méiyǒu", "ph": "may-yoh", "zh": "沒有", "en": "don't have", "pos": "verb", "sPy": "wo mei you ling qian", "sPyT": "Wǒ méiyǒu língqián.", "sZh": "我沒有零錢。", "sEn": "I don't have any change.", "ch": "Lesson"}, {"id": 60, "py": "xiao jie", "pyT": "xiǎojiě", "ph": "shyaow-jyeh", "zh": "小姐", "en": "miss", "pos": "noun", "sPy": "Li xiao jie hen keai", "sPyT": "Lǐ xiǎojiě hěn kě'ài.", "sZh": "李小姐很可愛。", "sEn": "Miss Li is very cute.", "ch": "Lesson"}, {"id": 61, "py": "xian sheng", "pyT": "xiānshēng", "ph": "shyen-shung", "zh": "先生", "en": "mister", "pos": "noun", "sPy": "Wang xian sheng shi lao shi", "sPyT": "Wáng xiānshēng shì lǎoshī.", "sZh": "王先生是老師。", "sEn": "Mr. Wang is a teacher.", "ch": "Lesson"}, {"id": 62, "py": "Li", "pyT": "Lǐ", "ph": "lee", "zh": "李", "en": "Li", "pos": "noun", "sPy": "ta xing Li", "sPyT": "Tā xìng Lǐ.", "sZh": "他姓李。", "sEn": "His surname is Li.", "ch": "Lesson"}, {"id": 63, "py": "Wang", "pyT": "Wáng", "ph": "wahng", "zh": "王", "en": "Wang", "pos": "noun", "sPy": "Wang xiao jie shi Taiwan ren", "sPyT": "Wáng xiǎojiě shì Táiwān rén.", "sZh": "王小姐是台灣人。", "sEn": "Miss Wang is Taiwanese.", "ch": "Lesson"}, {"id": 64, "py": "mei guo", "pyT": "Měiguó", "ph": "may-gwoh", "zh": "美國", "en": "America", "pos": "noun", "sPy": "wo peng you shi Mei guo ren", "sPyT": "Wǒ péngyǒu shì Měiguó rén.", "sZh": "我朋友是美國人。", "sEn": "My friend is American.", "ch": "Lesson"}, {"id": 65, "py": "mingzi", "pyT": "míngzì", "ph": "ming-dzuh", "zh": "名字", "en": "full name", "pos": "noun", "sPy": "ni de mingzi hen haoting", "sPyT": "Nǐ de míngzì hěn hǎotīng.", "sZh": "你的名字很好聽。", "sEn": "Your name sounds very nice.", "ch": "Lesson"}, {"id": 66, "py": "nei", "pyT": "něi", "ph": "nay", "zh": "哪", "en": "which", "pos": "pronoun", "sPy": "ni shi nei guo ren", "sPyT": "Nǐ shì něi guó rén?", "sZh": "你是哪國人？", "sEn": "Which country are you from?", "ch": "Lesson"}, {"id": 67, "py": "guo", "pyT": "guó", "ph": "gwoh", "zh": "國", "en": "country", "pos": "noun", "sPy": "Mei guo shi yi ge da guo", "sPyT": "Měiguó shì yī ge dà guó.", "sZh": "美國是一個大國。", "sEn": "America is a big country.", "ch": "Lesson"}, {"id": 68, "py": "ren", "pyT": "rén", "ph": "run", "zh": "人", "en": "people", "pos": "noun", "sPy": "Taipei de ren hen duo", "sPyT": "Táiběi de rén hěn duō.", "sZh": "台北的人很多。", "sEn": "There are many people in Taipei.", "ch": "Lesson"}, {"id": 69, "py": "dan gao", "pyT": "dàngāo", "ph": "dahn-gaow", "zh": "蛋糕", "en": "cake", "pos": "noun", "sPy": "zhe ge dan gao hen haochi", "sPyT": "Zhè ge dàngāo hěn hǎochī.", "sZh": "這個蛋糕很好吃。", "sEn": "This cake is very delicious.", "ch": "Lesson"}, {"id": 70, "py": "ri ben", "pyT": "Rìběn", "ph": "rir-bun", "zh": "日本", "en": "Japan", "pos": "noun", "sPy": "wo xi huan qu Ri ben", "sPyT": "Wǒ xǐhuān qù Rìběn.", "sZh": "我喜歡去日本。", "sEn": "I like going to Japan.", "ch": "Lesson"}, {"id": 71, "py": "ying guo", "pyT": "Yīngguó", "ph": "ying-gwoh", "zh": "英國", "en": "United Kingdom", "pos": "noun", "sPy": "ta shi Ying guo ren", "sPyT": "Tā shì Yīngguó rén.", "sZh": "他是英國人。", "sEn": "He is British.", "ch": "Lesson"}, {"id": 72, "py": "zhong guo", "pyT": "Zhōngguó", "ph": "johng-gwoh", "zh": "中國", "en": "China", "pos": "noun", "sPy": "Zhong guo cai hen haochi", "sPyT": "Zhōngguó cài hěn hǎochī.", "sZh": "中國菜很好吃。", "sEn": "Chinese food is very delicious.", "ch": "Lesson"}, {"id": 73, "py": "wen hua", "pyT": "wénhuà", "ph": "wun-hwah", "zh": "文化", "en": "culture", "pos": "noun", "sPy": "Taiwan de wen hua hen youyisi", "sPyT": "Táiwān de wénhuà hěn yǒuyìsi.", "sZh": "台灣的文化很有意思。", "sEn": "Taiwan's culture is very interesting.", "ch": "Lesson"}, {"id": 74, "py": "hua ren", "pyT": "Huárén", "ph": "hwah-run", "zh": "華人", "en": "ethnic chinese", "pos": "noun", "sPy": "Fei lu bin you hen duo hua ren", "sPyT": "Fēilǜbīn yǒu hěn duō Huárén.", "sZh": "菲律賓有很多華人。", "sEn": "There are many ethnic Chinese in the Philippines.", "ch": "Lesson"}, {"id": 75, "py": "tai bei", "pyT": "Táiběi", "ph": "tai-bay", "zh": "台北", "en": "taipei", "pos": "noun", "sPy": "wo zhu zai Tai bei", "sPyT": "Wǒ zhù zài Táiběi.", "sZh": "我住在台北。", "sEn": "I live in Taipei.", "ch": "Lesson"}, {"id": 76, "py": "nan", "pyT": "nán", "ph": "nahn", "zh": "難", "en": "difficult", "pos": "state verb", "sPy": "kao shi nan bu nan", "sPyT": "Kǎoshì nán bù nán?", "sZh": "考試難不難？", "sEn": "Is the test difficult or not?", "ch": "Lesson"}, {"id": 77, "py": "you yong", "pyT": "yóuyǒng", "ph": "yoh-yohng", "zh": "游泳", "en": "swim", "pos": "verb", "sPy": "wo xi huan you yong", "sPyT": "Wǒ xǐhuān yóuyǒng.", "sZh": "我喜歡游泳。", "sEn": "I like swimming.", "ch": "Lesson"}, {"id": 78, "py": "hai hao", "pyT": "háihǎo", "ph": "hai haow", "zh": "還好", "en": "it is okay", "pos": "state verb", "sPy": "jin tian de kao shi hai hao", "sPyT": "Jīntiān de kǎoshì háihǎo.", "sZh": "今天的考試還好。", "sEn": "Today's test was okay.", "ch": "Lesson"}, {"id": 79, "py": "pa shan", "pyT": "páshān", "ph": "pah shahn", "zh": "爬山", "en": "hike", "pos": "verb", "sPy": "xing qi tian wo men qu pa shan", "sPyT": "Xīngqí tiān wǒmen qù páshān.", "sZh": "星期天我們去爬山。", "sEn": "On Sunday we go hiking.", "ch": "Lesson"}, {"id": 80, "py": "tiao wu", "pyT": "tiàowǔ", "ph": "tyaow-woo", "zh": "跳舞", "en": "dance", "pos": "verb", "sPy": "jiejie hen hui tiao wu", "sPyT": "Jiějie hěn huì tiàowǔ.", "sZh": "姐姐很會跳舞。", "sEn": "Older sister is good at dancing.", "ch": "Lesson"}, {"id": 81, "py": "chang ge", "pyT": "chànggē", "ph": "chahng-guh", "zh": "唱歌", "en": "sing", "pos": "verb", "sPy": "wo men yiqi qu chang ge", "sPyT": "Wǒmen yīqǐ qù chànggē.", "sZh": "我們一起去唱歌。", "sEn": "Let's go sing together.", "ch": "Lesson"}, {"id": 82, "py": "zuo cai", "pyT": "zuòcài", "ph": "dzwoh-tsai", "zh": "做菜", "en": "cook", "pos": "verb", "sPy": "mama hen hui zuo cai", "sPyT": "Māma hěn huì zuòcài.", "sZh": "媽媽很會做菜。", "sEn": "Mom is very good at cooking.", "ch": "Lesson"}, {"id": 83, "py": "kan", "pyT": "kàn", "ph": "kahn", "zh": "看", "en": "To look, read, or watch", "pos": "verb", "sPy": "wo xi huan kan shu", "sPyT": "Wǒ xǐhuān kàn shū.", "sZh": "我喜歡看書。", "sEn": "I like reading books.", "ch": "Lesson"}, {"id": 84, "py": "shu", "pyT": "shū", "ph": "shoo", "zh": "書", "en": "book", "pos": "noun", "sPy": "zhe ben shu hen haokan", "sPyT": "Zhè běn shū hěn hǎokàn.", "sZh": "這本書很好看。", "sEn": "This book is very good / interesting.", "ch": "Lesson"}, {"id": 85, "py": "man hua", "pyT": "mànhuà", "ph": "mahn-hwah", "zh": "漫畫", "en": "comics", "pos": "noun", "sPy": "didi xi huan kan man hua", "sPyT": "Dìdi xǐhuān kàn mànhuà.", "sZh": "弟弟喜歡看漫畫。", "sEn": "Younger brother likes reading comics.", "ch": "Lesson"}, {"id": 86, "py": "pao bu", "pyT": "pǎobù", "ph": "paow-boo", "zh": "跑步", "en": "run", "pos": "verb", "sPy": "wo meitian zaoshang pao bu", "sPyT": "Wǒ měitiān zǎoshang pǎobù.", "sZh": "我每天早上跑步。", "sEn": "I go running every morning.", "ch": "Lesson"}, {"id": 87, "py": "da qiu", "pyT": "dǎqiú", "ph": "dah-chyoh", "zh": "打球", "en": "play ball sports", "pos": "verb", "sPy": "gege xi huan da qiu", "sPyT": "Gēge xǐhuān dǎqiú.", "sZh": "哥哥喜歡打球。", "sEn": "Older brother likes playing ball sports.", "ch": "Lesson"}, {"id": 88, "py": "dian ying", "pyT": "diànyǐng", "ph": "dyen-ying", "zh": "電影", "en": "movie", "pos": "noun", "sPy": "wo men qu kan dian ying ba", "sPyT": "Wǒmen qù kàn diànyǐng ba!", "sZh": "我們去看電影吧！", "sEn": "Let's go watch a movie!", "ch": "Lesson"}, {"id": 89, "py": "dian", "pyT": "diàn", "ph": "dyen", "zh": "電", "en": "electric", "pos": "noun", "sPy": "qing kai dian deng", "sPyT": "Qǐng kāi diàndēng.", "sZh": "請開電燈。", "sEn": "Please turn on the electric light.", "ch": "Lesson"}, {"id": 90, "py": "ying", "pyT": "yǐng", "ph": "ying", "zh": "影", "en": "shadow or image", "pos": "noun", "sPy": "zhe bu dian ying hen haokan", "sPyT": "Zhè bù diànyǐng hěn hǎokàn.", "sZh": "這部電影很好看。", "sEn": "This movie is very good.", "ch": "Lesson"}, {"id": 91, "py": "shui jiao", "pyT": "shuìjiào", "ph": "shway-jyaow", "zh": "睡覺", "en": "sleep", "pos": "verb", "sPy": "wo lei le, xiang shui jiao", "sPyT": "Wǒ lèi le, xiǎng shuìjiào.", "sZh": "我累了，想睡覺。", "sEn": "I'm tired and want to sleep.", "ch": "Lesson"}, {"id": 92, "py": "jiu", "pyT": "jiǔ", "ph": "jyoh", "zh": "酒", "en": "alcohol", "pos": "noun", "sPy": "baba bu he jiu", "sPyT": "Bàba bù hē jiǔ.", "sZh": "爸爸不喝酒。", "sEn": "Dad doesn't drink alcohol.", "ch": "Lesson"}, {"id": 93, "py": "cha", "pyT": "chá", "ph": "chah", "zh": "茶", "en": "tea", "pos": "noun", "sPy": "Taiwan de cha hen haohe", "sPyT": "Táiwān de chá hěn hǎohē.", "sZh": "台灣的茶很好喝。", "sEn": "Taiwanese tea is very tasty.", "ch": "Lesson"}, {"id": 94, "py": "ka fei", "pyT": "kāfēi", "ph": "kah-fay", "zh": "咖啡", "en": "coffee", "pos": "noun", "sPy": "wo zaoshang he yi bei ka fei", "sPyT": "Wǒ zǎoshang hē yī bēi kāfēi.", "sZh": "我早上喝一杯咖啡。", "sEn": "I drink a cup of coffee in the morning.", "ch": "Lesson"}, {"id": 95, "py": "tian dian", "pyT": "tiándiǎn", "ph": "tyen-dyen", "zh": "甜點", "en": "sweets", "pos": "noun", "sPy": "nu haizi xi huan chi tian dian", "sPyT": "Nǚ háizi xǐhuān chī tiándiǎn.", "sZh": "女孩子喜歡吃甜點。", "sEn": "Girls like eating sweets / desserts.", "ch": "Lesson"}, {"id": 96, "py": "ye", "pyT": "yě", "ph": "yeh", "zh": "也", "en": "also", "pos": "adverb", "sPy": "wo ye xi huan xu lao shi", "sPyT": "Wǒ yě xǐhuān Xú lǎoshī.", "sZh": "我也喜歡徐老師。", "sEn": "I also like Teacher Xu.", "ch": "Lesson"}, {"id": 97, "py": "dai zi", "pyT": "dàizi", "ph": "dai-dzuh", "zh": "袋子", "en": "bag", "pos": "noun", "sPy": "qing wen yao bu yao dai zi", "sPyT": "Qǐngwèn yào bù yào dàizi?", "sZh": "請問要不要袋子？", "sEn": "Excuse me, do you need a bag?", "ch": "Lesson"}, {"id": 98, "py": "hui yuan", "pyT": "huìyuán", "ph": "hway-ywen", "zh": "會員", "en": "membership", "pos": "noun", "sPy": "qing wen you hui yuan ma", "sPyT": "Qǐngwèn yǒu huìyuán ma?", "sZh": "請問有會員嗎？", "sEn": "Excuse me, do you have a membership?", "ch": "Lesson"}, {"id": 99, "py": "dian hua", "pyT": "diànhuà", "ph": "dyen-hwah", "zh": "電話", "en": "phone", "pos": "noun", "sPy": "ni de dian hua shi duo shao", "sPyT": "Nǐ de diànhuà shì duōshǎo?", "sZh": "你的電話是多少？", "sEn": "What is your phone number?", "ch": "Lesson"}, {"id": 100, "py": "zai ju", "pyT": "zàijù", "ph": "dzai-jyoo", "zh": "載具", "en": "mobile barcode", "pos": "noun", "sPy": "wo yao shua zai ju", "sPyT": "Wǒ yào shuā zàijù.", "sZh": "我要刷載具。", "sEn": "I want to scan my mobile barcode.", "ch": "Lesson"}, {"id": 101, "py": "ming xi", "pyT": "míngxì", "ph": "ming-shee", "zh": "明細", "en": "details", "pos": "noun", "sPy": "qing wen yao bu yao ming xi", "sPyT": "Qǐngwèn yào bù yào míngxì?", "sZh": "請問要不要明細？", "sEn": "Excuse me, do you want the receipt details?", "ch": "Lesson"}, {"id": 102, "py": "xing qi yi", "pyT": "xīngqí yī", "ph": "shing-chee ee", "zh": "星期一", "en": "monday", "pos": "noun", "sPy": "xing qi yi wo yao shang ke", "sPyT": "Xīngqí yī wǒ yào shàngkè.", "sZh": "星期一我要上課。", "sEn": "On Monday I have to attend class.", "ch": "Lesson"}, {"id": 103, "py": "xing qi er", "pyT": "xīngqí èr", "ph": "shing-chee ar", "zh": "星期二", "en": "tuesday", "pos": "noun", "sPy": "xing qi er you ting xie", "sPyT": "Xīngqí èr yǒu tīngxiě.", "sZh": "星期二有聽寫。", "sEn": "On Tuesday there is dictation.", "ch": "Lesson"}, {"id": 104, "py": "xing qi san", "pyT": "xīngqí sān", "ph": "shing-chee sahn", "zh": "星期三", "en": "wednesday", "pos": "noun", "sPy": "xing qi san wo qu you yong", "sPyT": "Xīngqí sān wǒ qù yóuyǒng.", "sZh": "星期三我去游泳。", "sEn": "On Wednesday I go swimming.", "ch": "Lesson"}, {"id": 105, "py": "xing qi si", "pyT": "xīngqí sì", "ph": "shing-chee suh", "zh": "星期四", "en": "thursday", "pos": "noun", "sPy": "xing qi si wo hen mang", "sPyT": "Xīngqí sì wǒ hěn máng.", "sZh": "星期四我很忙。", "sEn": "On Thursday I am very busy.", "ch": "Lesson"}, {"id": 106, "py": "xing qi wu", "pyT": "xīngqí wǔ", "ph": "shing-chee woo", "zh": "星期五", "en": "friday", "pos": "noun", "sPy": "xing qi wu wanshang kan dian ying", "sPyT": "Xīngqí wǔ wǎnshàng kàn diànyǐng.", "sZh": "星期五晚上看電影。", "sEn": "On Friday night I watch a movie.", "ch": "Lesson"}, {"id": 107, "py": "xing qi liu", "pyT": "xīngqí liù", "ph": "shing-chee lyoh", "zh": "星期六", "en": "saturday", "pos": "noun", "sPy": "xing qi liu wo qu pa shan", "sPyT": "Xīngqí liù wǒ qù páshān.", "sZh": "星期六我去爬山。", "sEn": "On Saturday I go hiking.", "ch": "Lesson"}, {"id": 108, "py": "xing qi tian", "pyT": "xīngqí tiān", "ph": "shing-chee tyen", "zh": "星期天", "en": "sunday", "pos": "noun", "sPy": "xing qi tian wo zai jia xiu xi", "sPyT": "Xīngqí tiān wǒ zài jiā xiūxí.", "sZh": "星期天我在家休息。", "sEn": "On Sunday I rest at home.", "ch": "Lesson"}, {"id": 109, "py": "tian qi", "pyT": "tiānqì", "ph": "tyen-chee", "zh": "天氣", "en": "weather", "pos": "noun", "sPy": "tian qi hao re a", "sPyT": "Tiānqì hǎo rè a!", "sZh": "天氣好熱啊！", "sEn": "The weather is so hot!", "ch": "Lesson"}, {"id": 110, "py": "tai", "pyT": "tài", "ph": "tai", "zh": "太", "en": "very", "pos": "level adverb", "sPy": "zhe ge tai gui le", "sPyT": "Zhè ge tài guì le!", "sZh": "這個太貴了！", "sEn": "This is too expensive!", "ch": "Lesson"}, {"id": 111, "py": "qu", "pyT": "qù", "ph": "chyoo", "zh": "去", "en": "to go", "pos": "verb", "sPy": "wo yao qu shang dian", "sPyT": "Wǒ yào qù shāngdiàn.", "sZh": "我要去商店。", "sEn": "I want to go to the store.", "ch": "Lesson"}, {"id": 112, "py": "shang ke", "pyT": "shàngkè", "ph": "shahng-kuh", "zh": "上課", "en": "to attend class", "pos": "verb", "sPy": "wo ba dian qu shang ke", "sPyT": "Wǒ bā diǎn qù shàngkè.", "sZh": "我八點去上課。", "sEn": "I go to class at 8 o'clock.", "ch": "Lesson"}, {"id": 113, "py": "yao", "pyT": "yào", "ph": "yaow", "zh": "要", "en": "want", "pos": "verb", "sPy": "ni yao chi shen me", "sPyT": "Nǐ yào chī shénme?", "sZh": "你要吃什麼？", "sEn": "What do you want to eat?", "ch": "Lesson"}, {"id": 114, "py": "jia re", "pyT": "jiārè", "ph": "jyah-ruh", "zh": "加熱", "en": "to heat up", "pos": "verb", "sPy": "yao jia re ma", "sPyT": "Yào jiārè ma?", "sZh": "要加熱嗎？", "sEn": "You want to heat it?", "ch": "Lesson"}, {"id": 115, "py": "can", "pyT": "cān", "ph": "tsahn", "zh": "餐", "en": "food, meal, or eat", "pos": "noun", "sPy": "wo men yiqi chi wucan", "sPyT": "Wǒmen yīqǐ chī wǔcān.", "sZh": "我們一起吃午餐。", "sEn": "Let's eat lunch together.", "ch": "Lesson"}, {"id": 116, "py": "ting", "pyT": "tīng", "ph": "ting", "zh": "廳", "en": "hall, large room, or office", "pos": "noun", "sPy": "can ting zai yi lou", "sPyT": "Cāntīng zài yī lóu.", "sZh": "餐廳在一樓。", "sEn": "The restaurant / dining hall is on the first floor.", "ch": "Lesson"}, {"id": 117, "py": "can ting", "pyT": "cāntīng", "ph": "tsahn-ting", "zh": "餐廳", "en": "restaurant", "pos": "noun", "sPy": "zhe jia can ting hen haochi", "sPyT": "Zhè jiā cāntīng hěn hǎochī.", "sZh": "這家餐廳很好吃。", "sEn": "This restaurant is very delicious.", "ch": "Lesson"}, {"id": 118, "py": "nei yong", "pyT": "nèiyòng", "ph": "nay-yohng", "zh": "內用", "en": "dine in", "pos": "verb", "sPy": "qing wen nei yong hai shi wai dai", "sPyT": "Qǐngwèn nèiyòng háishì wàidài?", "sZh": "請問內用還是外帶？", "sEn": "Excuse me, dine in or take out?", "ch": "Lesson"}, {"id": 119, "py": "hai shi", "pyT": "háishì", "ph": "hai-shir", "zh": "還是", "en": "or", "pos": "conjunction", "sPy": "ni yao he cha hai shi ka fei", "sPyT": "Nǐ yào hē chá háishì kāfēi?", "sZh": "你要喝茶還是咖啡？", "sEn": "Do you want to drink tea or coffee?", "ch": "Lesson"}, {"id": 120, "py": "wai dai", "pyT": "wàidài", "ph": "wai-dai", "zh": "外帶", "en": "take out", "pos": "verb", "sPy": "wo yao wai dai", "sPyT": "Wǒ yào wàidài.", "sZh": "我要外帶。", "sEn": "I want take out.", "ch": "Lesson"}, {"id": 121, "py": "ji", "pyT": "jǐ", "ph": "jee", "zh": "幾", "en": "how many", "pos": "pronoun", "sPy": "ni you ji ge peng you", "sPyT": "Nǐ yǒu jǐ ge péngyǒu?", "sZh": "你有幾個朋友？", "sEn": "How many friends do you have?", "ch": "Lesson"}, {"id": 122, "py": "wei", "pyT": "wèi", "ph": "way", "zh": "位", "en": "people (polite)", "pos": "measure word", "sPy": "qing wen ji wei", "sPyT": "Qǐngwèn jǐ wèi?", "sZh": "請問幾位？", "sEn": "Excuse me, how many people?", "ch": "Lesson"}, {"id": 123, "py": "ji wei", "pyT": "jǐ wèi", "ph": "jee way", "zh": "幾位", "en": "how many people", "pos": "phrase", "sPy": "wo men you si wei", "sPyT": "Wǒmen yǒu sì wèi.", "sZh": "我們有四位。", "sEn": "We have four people.", "ch": "Lesson"}, {"id": 124, "py": "cai dan", "pyT": "càidān", "ph": "tsai-dahn", "zh": "菜單", "en": "menu", "pos": "noun", "sPy": "qing wen you mei you cai dan", "sPyT": "Qǐngwèn yǒu méiyǒu càidān?", "sZh": "請問有沒有菜單？", "sEn": "Excuse me, do you have a menu?", "ch": "Lesson"}, {"id": 125, "py": "qing wen", "pyT": "qǐngwèn", "ph": "ching-wun", "zh": "請問", "en": "excuse me", "pos": "phrase", "sPy": "qing wen xishoujian zai nali", "sPyT": "Qǐngwèn xǐshǒujiān zài nǎlǐ?", "sZh": "請問洗手間在哪裡？", "sEn": "Excuse me, where is the restroom?", "ch": "Lesson"}, {"id": 126, "py": "dian cai", "pyT": "diǎncài", "ph": "dyen-tsai", "zh": "點菜", "en": "to order food", "pos": "verb", "sPy": "wo men xianzai keyi dian cai ma", "sPyT": "Wǒmen xiànzài kěyǐ diǎncài ma?", "sZh": "我們現在可以點菜嗎？", "sEn": "Can we order food now?", "ch": "Lesson"}, {"id": 127, "py": "da bao", "pyT": "dǎbāo", "ph": "dah-baow", "zh": "打包", "en": "to pack up", "pos": "verb", "sPy": "qing bang wo da bao", "sPyT": "Qǐng bāng wǒ dǎbāo.", "sZh": "請幫我打包。", "sEn": "Please pack this up for me.", "ch": "Lesson"}, {"id": 128, "py": "mai dan", "pyT": "mǎidān", "ph": "mai-dahn", "zh": "買單", "en": "to pay bill at a restaurant", "pos": "verb", "sPy": "qing wen zai nali mai dan", "sPyT": "Qǐngwèn zài nǎlǐ mǎidān?", "sZh": "請問在哪裡買單？", "sEn": "Excuse me, where do I pay the bill?", "ch": "Lesson"}, {"id": 129, "py": "yin liao", "pyT": "yǐnliào", "ph": "yin-lyaow", "zh": "飲料", "en": "drink", "pos": "noun", "sPy": "ni yao dian shen me yin liao", "sPyT": "Nǐ yào diǎn shénme yǐnliào?", "sZh": "你要點什麼飲料？", "sEn": "What drink do you want to order?", "ch": "Lesson"}, {"id": 130, "py": "yin liao dian", "pyT": "yǐnliào diàn", "ph": "yin-lyaow dyen", "zh": "飲料店", "en": "beverage store", "pos": "noun", "sPy": "Taiwan you hen duo yin liao dian", "sPyT": "Táiwān yǒu hěn duō yǐnliào diàn.", "sZh": "台灣有很多飲料店。", "sEn": "Taiwan has many beverage shops.", "ch": "Lesson"}, {"id": 131, "py": "wu tang", "pyT": "wútáng", "ph": "woo-tahng", "zh": "無糖", "en": "0% sugar", "pos": "noun", "sPy": "wo de cha yao wu tang", "sPyT": "Wǒ de chá yào wútáng.", "sZh": "我的茶要無糖。", "sEn": "I want 0% sugar for my tea.", "ch": "Lesson"}, {"id": 132, "py": "wei tang", "pyT": "wéitáng", "ph": "way-tahng", "zh": "微糖", "en": "30% sugar", "pos": "noun", "sPy": "qing gei wo wei tang", "sPyT": "Qǐng gěi wǒ wéitáng.", "sZh": "請給我微糖。", "sEn": "Please give me 30% sugar.", "ch": "Lesson"}, {"id": 133, "py": "ban tang", "pyT": "bàntáng", "ph": "bahn-tahng", "zh": "半糖", "en": "50% sugar", "pos": "noun", "sPy": "wo xi huan ban tang", "sPyT": "Wǒ xǐhuān bàntáng.", "sZh": "我喜歡半糖。", "sEn": "I like 50% sugar.", "ch": "Lesson"}, {"id": 134, "py": "shao tang", "pyT": "shǎotáng", "ph": "shaow-tahng", "zh": "少糖", "en": "70% sugar", "pos": "noun", "sPy": "zhe bei yin liao yao shao tang", "sPyT": "Zhè bēi yǐnliào yào shǎotáng.", "sZh": "這杯飲料要少糖。", "sEn": "This drink should have 70% sugar.", "ch": "Lesson"}, {"id": 135, "py": "zheng chang tang", "pyT": "zhèngcháng táng", "ph": "jung-chahng tahng", "zh": "正常糖", "en": "regular sugar", "pos": "noun", "sPy": "ta yao zheng chang tang", "sPyT": "Tā yào zhèngcháng táng.", "sZh": "他要正常糖。", "sEn": "He wants regular sugar.", "ch": "Lesson"}, {"id": 136, "py": "qu bing", "pyT": "qùbīng", "ph": "chyoo-bing", "zh": "去冰", "en": "0% ice", "pos": "noun", "sPy": "wo yao wu tang qu bing", "sPyT": "Wǒ yào wútáng qùbīng.", "sZh": "我要無糖去冰。", "sEn": "I want 0% sugar and 0% ice.", "ch": "Lesson"}, {"id": 137, "py": "wei bing", "pyT": "wéibīng", "ph": "way-bing", "zh": "微冰", "en": "30% ice", "pos": "noun", "sPy": "qing gei wo wei bing", "sPyT": "Qǐng gěi wǒ wéibīng.", "sZh": "請給我微冰。", "sEn": "Please give me 30% ice.", "ch": "Lesson"}, {"id": 138, "py": "shao bing", "pyT": "shǎobīng", "ph": "shaow-bing", "zh": "少冰", "en": "70% ice", "pos": "noun", "sPy": "wo de ka fei yao shao bing", "sPyT": "Wǒ de kāfēi yào shǎobīng.", "sZh": "我的咖啡要少冰。", "sEn": "I want 70% ice for my coffee.", "ch": "Lesson"}, {"id": 139, "py": "zheng chang bing", "pyT": "zhèngcháng bīng", "ph": "jung-chahng bing", "zh": "正常冰", "en": "100% ice", "pos": "noun", "sPy": "ta xihuan zheng chang bing", "sPyT": "Tā xǐhuān zhèngcháng bīng.", "sZh": "他喜歡正常冰。", "sEn": "He likes 100% ice.", "ch": "Lesson"}, {"id": 140, "py": "zuo cai", "pyT": "zuòcài", "ph": "dzwoh-tsai", "zh": "做菜", "en": "to cook", "pos": "verb", "sPy": "wo xihuan zai jia zuo cai", "sPyT": "Wǒ xǐhuān zài jiā zuòcài.", "sZh": "我喜歡在家做菜。", "sEn": "I like cooking at home.", "ch": "Lesson"}, {"id": 141, "py": "zhong wen", "pyT": "Zhōngwén", "ph": "johng-wun", "zh": "中文", "en": "chinese language", "pos": "noun", "sPy": "wo zai xue zhong wen", "sPyT": "Wǒ zài xué Zhōngwén.", "sZh": "我在學中文。", "sEn": "I am learning Chinese.", "ch": "Lesson"}, {"id": 142, "py": "fei chang", "pyT": "fēicháng", "ph": "fay-chahng", "zh": "非常", "en": "very", "pos": "level adverb", "sPy": "jin tian fei chang re", "sPyT": "Jīntiān fēicháng rè.", "sZh": "今天非常熱。", "sEn": "Today is extremely hot.", "ch": "Lesson"}, {"id": 143, "py": "hen", "pyT": "hěn", "ph": "hun", "zh": "很", "en": "normal", "pos": "level adverb", "sPy": "zhe ben shu hen haokan", "sPyT": "Zhè běn shū hěn hǎokàn.", "sZh": "這本書很好看。", "sEn": "This book is very good.", "ch": "Lesson"}, {"id": 144, "py": "hai suan", "pyT": "háisuàn", "ph": "hai-swahn", "zh": "還算", "en": "kind of", "pos": "level adverb", "sPy": "zhong wen hai suan rongyi", "sPyT": "Zhōngwén háisuàn róngyì.", "sZh": "中文還算容易。", "sEn": "Chinese is kind of easy.", "ch": "Lesson"}, {"id": 145, "py": "you dian", "pyT": "yǒudiǎn", "ph": "yoh-dyen", "zh": "有點", "en": "a bit of (for negative)", "pos": "level adverb", "sPy": "jin tian you dian leng", "sPyT": "Jīntiān yǒudiǎn lěng.", "sZh": "今天有點冷。", "sEn": "Today is a bit cold.", "ch": "Lesson"}, {"id": 146, "py": "bu tai", "pyT": "bù tài", "ph": "boo tai", "zh": "不太", "en": "not quite", "pos": "level adverb", "sPy": "wo bu tai xi huan chi tian dian", "sPyT": "Wǒ bù tài xǐhuān chī tiándiǎn.", "sZh": "我不太喜歡吃甜點。", "sEn": "I don't quite like eating sweets.", "ch": "Lesson"}, {"id": 147, "py": "bu", "pyT": "bù", "ph": "boo", "zh": "不", "en": "not at all", "pos": "level adverb", "sPy": "zhe ge bu gui", "sPyT": "Zhè ge bù guì.", "sZh": "這個不貴。", "sEn": "This is not expensive.", "ch": "Lesson"}, {"id": 148, "py": "jue de", "pyT": "juéde", "ph": "jweh-duh", "zh": "覺得", "en": "to think or to feel", "pos": "verb", "sPy": "ni jue de tai wan re bu re", "sPyT": "Nǐ juéde Táiwān rè bù rè?", "sZh": "你覺得台灣熱不熱？", "sEn": "Do you think Taiwan is hot or not?", "ch": "Lesson"}, {"id": 149, "py": "zen me yang", "pyT": "zěnmeyàng", "ph": "dzun-muh-yahng", "zh": "怎麼樣", "en": "how is it?", "pos": "pronoun", "sPy": "ni jue de Pokemon zen me yang", "sPyT": "Nǐ juéde Bǎokěmèng zěnmeyàng?", "sZh": "你覺得寶可夢怎麼樣？", "sEn": "What do you think of Pokémon?", "ch": "Lesson"}, {"id": 150, "py": "yi yue", "pyT": "yīyuè", "ph": "ee-yweh", "zh": "一月", "en": "january", "pos": "noun", "sPy": "yi yue yi hao shi xinnian", "sPyT": "Yīyuè yī rì shì xīnnián.", "sZh": "一月一日是新年。", "sEn": "January 1st is New Year's Day.", "ch": "Lesson"}, {"id": 151, "py": "er yue", "pyT": "èryuè", "ph": "ar-yweh", "zh": "二月", "en": "february", "pos": "noun", "sPy": "er yue you chunjie", "sPyT": "Èryuè yǒu chūnjié.", "sZh": "二月有春節。", "sEn": "Chinese New Year is in February.", "ch": "Lesson"}, {"id": 152, "py": "san yue", "pyT": "sānyuè", "ph": "sahn-yweh", "zh": "三月", "en": "march", "pos": "noun", "sPy": "san yue tian qi hen shufu", "sPyT": "Sānyuè tiānqì hěn shūfu.", "sZh": "三月天氣很舒服。", "sEn": "The weather in March is very comfortable.", "ch": "Lesson"}, {"id": 153, "py": "si yue", "pyT": "sìyuè", "ph": "suh-yweh", "zh": "四月", "en": "april", "pos": "noun", "sPy": "si yue changchang xiayu", "sPyT": "Sìyuè chángcháng xiàyǔ.", "sZh": "四月常常下雨。", "sEn": "It often rains in April.", "ch": "Lesson"}, {"id": 154, "py": "wu yue", "pyT": "wǔyuè", "ph": "woo-yweh", "zh": "五月", "en": "may", "pos": "noun", "sPy": "wu yue you muqinjie", "sPyT": "Wǔyuè yǒu mǔqīnjié.", "sZh": "五月有母親節。", "sEn": "Mother's Day is in May.", "ch": "Lesson"}, {"id": 155, "py": "liu yue", "pyT": "liùyuè", "ph": "lyoh-yweh", "zh": "六月", "en": "june", "pos": "noun", "sPy": "liu yue tian qi kaishi re le", "sPyT": "Liùyuè tiānqì kāishǐ rè le.", "sZh": "六月天氣開始熱了。", "sEn": "The weather starts getting hot in June.", "ch": "Lesson"}, {"id": 156, "py": "qi yue", "pyT": "qīyuè", "ph": "chee-yweh", "zh": "七月", "en": "july", "pos": "noun", "sPy": "qi yue fang shujia", "sPyT": "Qīyuè fàng shǔjià.", "sZh": "七月放暑假。", "sEn": "Summer vacation starts in July.", "ch": "Lesson"}, {"id": 157, "py": "ba yue", "pyT": "bāyuè", "ph": "bah-yweh", "zh": "八月", "en": "august", "pos": "noun", "sPy": "ba yue hen re", "sPyT": "Bāyuè hěn rè.", "sZh": "八月很熱。", "sEn": "August is very hot.", "ch": "Lesson"}, {"id": 158, "py": "jiu yue", "pyT": "jiǔyuè", "ph": "jyoh-yweh", "zh": "九月", "en": "september", "pos": "noun", "sPy": "wo de sheng ri zai jiu yue", "sPyT": "Wǒ de shēngrì zài jiǔyuè.", "sZh": "我的生日在九月。", "sEn": "My birthday is in September.", "ch": "Lesson"}, {"id": 159, "py": "shi yue", "pyT": "shíyuè", "ph": "shir-yweh", "zh": "十月", "en": "october", "pos": "noun", "sPy": "shi yue shi hao shi guoqingjie", "sPyT": "Shíyuè shí hào shì guóqìngrì.", "sZh": "十月十號是國慶日。", "sEn": "October 10th is National Day.", "ch": "Lesson"}, {"id": 160, "py": "shi yi yue", "pyT": "shíyīyuè", "ph": "shir-ee-yweh", "zh": "十一月", "en": "november", "pos": "noun", "sPy": "shi yi yue tian qi liangkuai", "sPyT": "Shíyīyuè tiānqì liángshuǎng.", "sZh": "十一月天氣涼爽。", "sEn": "The weather in November is cool.", "ch": "Lesson"}, {"id": 161, "py": "shi er yue", "pyT": "shí'èryuè", "ph": "shir-ar-yweh", "zh": "十二月", "en": "december", "pos": "noun", "sPy": "shi er yue you shengdanjie", "sPyT": "Shí'èryuè yǒu shèngdànjié.", "sZh": "十二月有聖誕節。", "sEn": "Christmas is in December.", "ch": "Lesson"}, {"id": 162, "py": "hao ri", "pyT": "hào / rì", "ph": "haow / rir", "zh": "號 / 日", "en": "day of the month", "pos": "noun", "sPy": "yi yue yi hao", "sPyT": "Yīyuè yī hào.", "sZh": "一月一號。", "sEn": "January 1st", "ch": "Lesson"}, {"id": 163, "py": "sheng ri", "pyT": "shēngrì", "ph": "shung-rir", "zh": "生日", "en": "birthday", "pos": "noun", "sPy": "zhu ni sheng ri kuai le", "sPyT": "Zhù nǐ shēngrì kuàilè!", "sZh": "祝你生日快樂！", "sEn": "Wish you a happy birthday!", "ch": "Lesson"}, {"id": 164, "py": "wo de", "pyT": "wǒ de", "ph": "wwoh-duh", "zh": "我的", "en": "mine", "pos": "pronoun", "sPy": "zhe shi wo de shu", "sPyT": "Zhè shì wǒ de shū.", "sZh": "這是我的書。", "sEn": "This is my book.", "ch": "Lesson"}, {"id": 165, "py": "ni de", "pyT": "nǐ de", "ph": "nee-duh", "zh": "你的", "en": "yours", "pos": "pronoun", "sPy": "na shi ni de bei zi ma", "sPyT": "Nà shì nǐ de bēizi ma?", "sZh": "那是你的杯子嗎？", "sEn": "Is that your cup?", "ch": "Lesson"}, {"id": 166, "py": "nian", "pyT": "nián", "ph": "nyen", "zh": "年", "en": "year", "pos": "noun", "sPy": "jin nian shi er ling er liu nian", "sPyT": "Jīnnián shì èr líng èr liù nián.", "sZh": "今年是二零二六年。", "sEn": "This year is 2026.", "ch": "Lesson"}, {"id": 167, "py": "rongyi", "pyT": "róngyì", "ph": "rohng-ee", "zh": "容易", "en": "easy", "pos": "state verb", "sPy": "zhe ge kao shi hen rongyi", "sPyT": "Zhè ge kǎoshì hěn róngyì.", "sZh": "這個考試很容易。", "sEn": "This test is very easy.", "ch": "Lesson"}, {"id": 168, "py": "da", "pyT": "dà", "ph": "dah", "zh": "大", "en": "big", "pos": "state verb", "sPy": "zhe zhi gou hen da", "sPyT": "Zhè zhī gǒu hěn dà.", "sZh": "這隻狗很大。", "sEn": "This dog is very big.", "ch": "Lesson"}, {"id": 169, "py": "xiao", "pyT": "xiǎo", "ph": "shyaow", "zh": "小", "en": "small", "pos": "state verb", "sPy": "na zhi mao hen xiao", "sPyT": "Nà zhī māo hěn xiǎo.", "sZh": "那隻貓很小。", "sEn": "That cat is very small.", "ch": "Lesson"}, {"id": 170, "py": "kuai", "pyT": "kuài", "ph": "kwai", "zh": "快", "en": "fast", "pos": "state verb", "sPy": "ta pao de hen kuai", "sPyT": "Tā pǎo de hěn kuài.", "sZh": "他跑得很快。", "sEn": "He runs very fast.", "ch": "Lesson"}, {"id": 171, "py": "man", "pyT": "màn", "ph": "mahn", "zh": "慢", "en": "slow", "pos": "state verb", "sPy": "qing ni shuo man yi dian", "sPyT": "Qǐng nǐ shuō màn yīdiǎn.", "sZh": "請你說慢一點。", "sEn": "Please speak a little slower.", "ch": "Lesson"}, {"id": 172, "py": "leng", "pyT": "lěng", "ph": "lung", "zh": "冷", "en": "cold", "pos": "state verb", "sPy": "dongtian hen leng", "sPyT": "Dōngtiān hěn lěng.", "sZh": "冬天很冷。", "sEn": "Winter is very cold.", "ch": "Lesson"}, {"id": 173, "py": "re", "pyT": "rè", "ph": "ruh", "zh": "熱", "en": "hot", "pos": "state verb", "sPy": "xiatian fei chang re", "sPyT": "Xiàtiān fēicháng rè.", "sZh": "夏天非常熱。", "sEn": "Summer is very hot.", "ch": "Lesson"}, {"id": 174, "py": "gui", "pyT": "guì", "ph": "gway", "zh": "貴", "en": "expensive", "pos": "state verb", "sPy": "zhe jian yifu tai gui le", "sPyT": "Zhè jiàn yīfú tài guì le.", "sZh": "這件衣服太貴了。", "sEn": "This piece of clothing is too expensive.", "ch": "Lesson"}, {"id": 175, "py": "pianyi", "pyT": "piányí", "ph": "pyen-ee", "zh": "便宜", "en": "cheap", "pos": "state verb", "sPy": "zhe jia shang dian de dong xi hen pianyi", "sPyT": "Zhè jiā shāngdiàn de dōngxī hěn piányí.", "sZh": "這家商店的東西很便宜。", "sEn": "Things at this shop are very cheap.", "ch": "Lesson"}, {"id": 176, "py": "zhong", "pyT": "zhòng", "ph": "johng", "zh": "重", "en": "heavy", "pos": "state verb", "sPy": "zhe ge dai zi hen zhong", "sPyT": "Zhè ge dàizi hěn zhòng.", "sZh": "這個袋子很重。", "sEn": "This bag is very heavy.", "ch": "Lesson"}, {"id": 177, "py": "qing", "pyT": "qīng", "ph": "ching", "zh": "輕", "en": "light", "pos": "state verb", "sPy": "zhe ben shu hen qing", "sPyT": "Zhè běn shū hěn qīng.", "sZh": "這本書很輕。", "sEn": "This book is very light.", "ch": "Lesson"}, {"id": 178, "py": "chang", "pyT": "cháng", "ph": "chahng", "zh": "長", "en": "long", "pos": "state verb", "sPy": "ta de toufa hen chang", "sPyT": "Tā de tóufà hěn cháng.", "sZh": "她的頭髮很長。", "sEn": "Her hair is very long.", "ch": "Lesson"}, {"id": 179, "py": "duan", "pyT": "duǎn", "ph": "dwahn", "zh": "短", "en": "short", "pos": "state verb", "sPy": "zhe zhi bi tai duan le", "sPyT": "Zhè zhī bǐ tài duǎn le.", "sZh": "這枝筆太短了。", "sEn": "This pen is too short.", "ch": "Lesson"}, {"id": 180, "py": "gao", "pyT": "gāo", "ph": "gaow", "zh": "高", "en": "tall", "pos": "state verb", "sPy": "wo gege hen gao", "sPyT": "Wǒ gēge hěn gāo.", "sZh": "我哥哥很高。", "sEn": "My older brother is very tall.", "ch": "Lesson"}, {"id": 181, "py": "ai", "pyT": "ǎi", "ph": "ai", "zh": "矮", "en": "small", "pos": "state verb", "sPy": "didi hai xiao, suoyi hen ai", "sPyT": "Dìdi hái xiǎo, suǒyǐ hěn ǎi.", "sZh": "弟弟還小，所以很矮。", "sEn": "Younger brother is still young, so he is short.", "ch": "Lesson"}, {"id": 182, "py": "pang", "pyT": "pàng", "ph": "pahng", "zh": "胖", "en": "fat", "pos": "state verb", "sPy": "wo de mao you dian pang", "sPyT": "Wǒ de māo yǒudiǎn pàng.", "sZh": "我的貓有點胖。", "sEn": "My cat is a bit fat.", "ch": "Lesson"}, {"id": 183, "py": "shou", "pyT": "shòu", "ph": "shoh", "zh": "瘦", "en": "thin", "pos": "state verb", "sPy": "ta hen shou", "sPyT": "Tā hěn shòu.", "sZh": "他很瘦。", "sEn": "He is very thin.", "ch": "Lesson"}, {"id": 184, "py": "mang", "pyT": "máng", "ph": "mahng", "zh": "忙", "en": "busy", "pos": "state verb", "sPy": "lao shi meitian dou hen mang", "sPyT": "Lǎoshī měitiān dōu hěn máng.", "sZh": "老師每天都很忙。", "sEn": "The teacher is very busy every day.", "ch": "Lesson"}, {"id": 185, "py": "lei", "pyT": "lèi", "ph": "lay", "zh": "累", "en": "tired", "pos": "state verb", "sPy": "jin tian shang ke hen lei", "sPyT": "Jīntiān shàngkè hěn lèi.", "sZh": "今天上課很累。", "sEn": "Attending class today was very tiring.", "ch": "Lesson"}, {"id": 186, "py": "congmin", "pyT": "cōngmíng", "ph": "tsohng-ming", "zh": "聰明", "en": "smart", "pos": "state verb", "sPy": "zhe ge xue sheng hen congmin", "sPyT": "Zhè ge xuéshēng hěn cōngmíng.", "sZh": "這個學生很聰明。", "sEn": "This student is very smart.", "ch": "Lesson"}, {"id": 187, "py": "ben", "pyT": "bèn", "ph": "bun", "zh": "笨", "en": "dumb", "pos": "state verb", "sPy": "wo bu ben, wo hen congmin", "sPyT": "Wǒ bù bèn, wǒ hěn cōngmíng.", "sZh": "我不笨，我很聰明。", "sEn": "I'm not dumb, I'm very smart.", "ch": "Lesson"}, {"id": 188, "py": "haoyong", "pyT": "hǎoyòng", "ph": "haow-yohng", "zh": "好用", "en": "useful, easy to use, handy", "pos": "state verb", "sPy": "zhe ge shouji hen haoyong", "sPyT": "Zhè ge shǒujī hěn hǎoyòng.", "sZh": "這個手機很好用。", "sEn": "This phone is very useful / handy.", "ch": "Lesson"}, {"id": 189, "py": "haochi", "pyT": "hǎochī", "ph": "haow-chir", "zh": "好吃", "en": "tasty food", "pos": "state verb", "sPy": "Taiwan de xiaochi hen haochi", "sPyT": "Táiwān de xiǎochī hěn hǎochī.", "sZh": "台灣的小吃很好吃。", "sEn": "Taiwanese snacks are very tasty.", "ch": "Lesson"}, {"id": 190, "py": "haohe", "pyT": "hǎohē", "ph": "haow-huh", "zh": "好喝", "en": "tasty drink", "pos": "state verb", "sPy": "zhenzhu naicha hen haohe", "sPyT": "Zhēnzhū nǎichá hěn hǎohē.", "sZh": "珍珠奶茶很好喝。", "sEn": "Bubble milk tea is very tasty.", "ch": "Lesson"}, {"id": 191, "py": "haowan", "pyT": "hǎowán", "ph": "haow-wahn", "zh": "好玩", "en": "fun, interesting", "pos": "state verb", "sPy": "zhe ge youxi hen haowan", "sPyT": "Zhè ge yóuxì hěn hǎowán.", "sZh": "這個遊戲很好玩。", "sEn": "This game is very fun.", "ch": "Lesson"}, {"id": 192, "py": "gaoxing", "pyT": "gāoxìng", "ph": "gaow-shing", "zh": "高興", "en": "immediate happiness", "pos": "state verb", "sPy": "renshi ni wo hen gaoxing", "sPyT": "Rènshì nǐ wǒ hěn gāoxìng.", "sZh": "認識你我很高興。", "sEn": "I am very happy to meet you.", "ch": "Lesson"}, {"id": 193, "py": "kuai le", "pyT": "kuàilè", "ph": "kwai-luh", "zh": "快樂", "en": "deep long term happiness", "pos": "state verb", "sPy": "zhu ni sheng ri kuai le", "sPyT": "Zhù nǐ shēngrì kuàilè!", "sZh": "祝你生日快樂！", "sEn": "Wish you a happy birthday!", "ch": "Lesson"}, {"id": 194, "py": "nanguo", "pyT": "nánguò", "ph": "nahn-gwoh", "zh": "難過", "en": "sad", "pos": "state verb", "sPy": "ta kaoshi bu hao, hen nanguo", "sPyT": "Tā kǎoshì bù hǎo, hěn nánguò.", "sZh": "他考試不好，很難過。", "sEn": "He did poorly on the test and is very sad.", "ch": "Lesson"}, {"id": 195, "py": "shengqi", "pyT": "shēngqì", "ph": "shung-chee", "zh": "生氣", "en": "angry", "pos": "state verb", "sPy": "lao shi shengqi le", "sPyT": "Lǎoshī shēngqì le.", "sZh": "老師生氣了。", "sEn": "The teacher got angry.", "ch": "Lesson"}, {"id": 196, "py": "jinzhang", "pyT": "jǐnzhāng", "ph": "jin-jahng", "zh": "緊張", "en": "nervous", "pos": "state verb", "sPy": "kaoshi qian wo hen jinzhang", "sPyT": "Kǎoshì qián wǒ hěn jǐnzhāng.", "sZh": "考試前我很緊張。", "sEn": "Before the test I am very nervous.", "ch": "Lesson"}, {"id": 197, "py": "fangbian", "pyT": "fāngbiàn", "ph": "fahng-byen", "zh": "方便", "en": "convenient", "pos": "state verb", "sPy": "Taipei de jieyun hen fangbian", "sPyT": "Táiběi de jiéyùn hěn fāngbiàn.", "sZh": "台北的捷運很方便。", "sEn": "Taipei's MRT is very convenient.", "ch": "Lesson"}, {"id": 198, "py": "qiguai", "pyT": "qíguài", "ph": "chee-gwai", "zh": "奇怪", "en": "weird", "pos": "state verb", "sPy": "zhe ge ren hen qiguai", "sPyT": "Zhè ge rén hěn qíguài.", "sZh": "這個人很奇怪。", "sEn": "This person is very weird.", "ch": "Lesson"}, {"id": 199, "py": "piaoliang", "pyT": "piàoliàng", "ph": "pyaow-lyahng", "zh": "漂亮", "en": "pretty", "pos": "state verb", "sPy": "ni de xiang pian hen piaoliang", "sPyT": "Nǐ de xiàngpiàn hěn piàoliàng.", "sZh": "你的相片很漂亮。", "sEn": "Your photo is very pretty.", "ch": "Lesson"}, {"id": 200, "py": "keai", "pyT": "kě'ài", "ph": "kuh-ai", "zh": "可愛", "en": "cute", "pos": "state verb", "sPy": "zhe zhi xiao mao hen keai", "sPyT": "Zhè zhī xiǎo māo hěn kě'ài.", "sZh": "這隻小貓很可愛。", "sEn": "This kitten is very cute.", "ch": "Lesson"}, {"id": 201, "py": "shuai", "pyT": "shuài", "ph": "shwai", "zh": "帥", "en": "handsome", "pos": "state verb", "sPy": "nan peng you hen shuai", "sPyT": "Nán péngyǒu hěn shuài.", "sZh": "男朋友很帥。", "sEn": "Boyfriend is very handsome.", "ch": "Lesson"}, {"id": 202, "py": "mei", "pyT": "měi", "ph": "may", "zh": "美", "en": "beautiful", "pos": "state verb", "sPy": "Taiwan de fengjing hen mei", "sPyT": "Táiwān de fēngjǐng hěn měi.", "sZh": "台灣的風景很美。", "sEn": "Taiwan's scenery is very beautiful.", "ch": "Lesson"}, {"id": 203, "py": "haokan", "pyT": "hǎokàn", "ph": "haow-kahn", "zh": "好看", "en": "good looking", "pos": "state verb", "sPy": "zhe bu dian ying hen haokan", "sPyT": "Zhè bù diànyǐng hěn hǎokàn.", "sZh": "這部電影很好看。", "sEn": "This movie is very good-looking / entertaining.", "ch": "Lesson"}, {"id": 204, "py": "lan", "pyT": "lǎn", "ph": "lahn", "zh": "懶", "en": "lazy", "pos": "state verb", "sPy": "wo de gou hen lan, zhi xihuan shui jiao", "sPyT": "Wǒ de gǒu hěn lǎn, zhǐ xǐhuān shuìjiào.", "sZh": "我的狗很懶，只喜歡睡覺。", "sEn": "My dog is very lazy and only likes sleeping.", "ch": "Lesson"}, {"id": 205, "py": "shang dian", "pyT": "shāngdiàn", "ph": "shahng-dyen", "zh": "商店", "en": "shop", "pos": "noun", "sPy": "wo qu shang dian mai dong xi", "sPyT": "Wǒ qù shāngdiàn mǎi dōngxī.", "sZh": "我去商店買東西。", "sEn": "I go to the shop to buy things.", "ch": "Lesson"}, {"id": 206, "py": "bian li", "pyT": "biànlì", "ph": "byen-lee", "zh": "便利", "en": "convenient", "pos": "state verb", "sPy": "bian li shang dian hen fangbian", "sPyT": "Biànlì shāngdiàn hěn fāngbiàn.", "sZh": "便利商店很方便。", "sEn": "Convenience stores are very convenient.", "ch": "Lesson"}, {"id": 207, "py": "dong xi", "pyT": "dōngxī", "ph": "dohng-shee", "zh": "東西", "en": "things", "pos": "noun", "sPy": "wo yao mai yi xie dong xi", "sPyT": "Wǒ yào mǎi yīxiē dōngxī.", "sZh": "我要買一些東西。", "sEn": "I want to buy some things.", "ch": "Lesson"}, {"id": 208, "py": "mai", "pyT": "mǎi", "ph": "mai", "zh": "買", "en": "buy", "pos": "verb", "sPy": "ni yao mai shen me", "sPyT": "Nǐ yào mǎi shénme?", "sZh": "你要買什麼？", "sEn": "What do you want to buy?", "ch": "Lesson"}, {"id": 209, "py": "lao shi", "pyT": "lǎoshī", "ph": "laow-shir", "zh": "老師", "en": "teacher", "pos": "noun", "sPy": "Xu lao shi hen haokan", "sPyT": "Xú lǎoshī hěn hǎokàn.", "sZh": "徐老師很好看。", "sEn": "Teacher Xu is very nice / good-looking.", "ch": "Lesson"}, {"id": 210, "py": "duo shao", "pyT": "duōshǎo", "ph": "dwoh-shaow", "zh": "多少", "en": "how much", "pos": "pronoun", "sPy": "zhe bei ka fei duo shao qian", "sPyT": "Zhè bēi kāfēi duōshǎo qián?", "sZh": "這杯咖啡多少錢？", "sEn": "How much is this cup of coffee?", "ch": "Lesson"}, {"id": 211, "py": "kuai qian", "pyT": "kuài qián", "ph": "kwai-chyen", "zh": "塊錢", "en": "pieces of money", "pos": "noun", "sPy": "shi kuai qian", "sPyT": "Shí kuài qián.", "sZh": "十塊錢。", "sEn": "Ten dollars (10 NTD)", "ch": "Lesson"}, {"id": 212, "py": "hao jiu", "pyT": "hǎojiǔ", "ph": "haow-jyoh", "zh": "好久", "en": "long time", "pos": "phrase", "sPy": "hao jiu bu jian, ni hao ma", "sPyT": "Hǎojiǔ bù jiàn, nǐ hǎo ma?", "sZh": "好久不見，你好嗎？", "sEn": "Long time no see, how are you?", "ch": "Lesson"}, {"id": 213, "py": "bu jian", "pyT": "bù jiàn", "ph": "boo-jyen", "zh": "不見", "en": "no see", "pos": "phrase", "sPy": "wo men hao jiu bu jian le", "sPyT": "Wǒmen hǎojiǔ bù jiàn le.", "sZh": "我們好久不見了。", "sEn": "We haven't seen each other in a long time.", "ch": "Lesson"}, {"id": 214, "py": "nin", "pyT": "nín", "ph": "neen", "zh": "您", "en": "you (a formal and respective form)", "pos": "pronoun", "sPy": "nin gui xing", "sPyT": "Nín guì xìng?", "sZh": "您貴姓？", "sEn": "May I ask your surname?", "ch": "Chapter 1"}, {"id": 215, "py": "guixing", "pyT": "guìxìng", "ph": "gway-shing", "zh": "貴姓", "en": "May I know your last name?", "pos": "phrase", "sPy": "qingwen nin guixing", "sPyT": "Qǐngwèn nín guìxìng?", "sZh": "請問您貴姓？", "sEn": "May I ask what your honorable surname is?", "ch": "Chapter 1"}, {"id": 216, "py": "xing", "pyT": "xìng", "ph": "shing", "zh": "姓", "en": "surname, family name, last name", "pos": "verb", "sPy": "wo xing Li", "sPyT": "Wǒ xìng Lǐ.", "sZh": "我姓李。", "sEn": "My surname is Li.", "ch": "Chapter 1"}, {"id": 217, "py": "Li", "pyT": "Lǐ", "ph": "lee", "zh": "李", "en": "a common Chinese surname", "pos": "noun", "sPy": "Li xiansheng shi laoshi", "sPyT": "Lǐ xiānshēng shì lǎoshī.", "sZh": "李先生是老師。", "sEn": "Mr. Li is a teacher.", "ch": "Chapter 1"}, {"id": 218, "py": "xiansheng", "pyT": "xiānshēng", "ph": "shyen-shung", "zh": "先生", "en": "Mr., Sir., gentleman, husband", "pos": "noun", "sPy": "Wang xiansheng ni hao", "sPyT": "Wáng xiānshēng, nǐ hǎo!", "sZh": "王先生，你好！", "sEn": "Hello, Mr. Wang!", "ch": "Chapter 1"}, {"id": 219, "py": "Wang", "pyT": "Wáng", "ph": "wahng", "zh": "王", "en": "a common Chinese surname", "pos": "noun", "sPy": "ta xing Wang", "sPyT": "Tā xìng Wáng.", "sZh": "他姓王。", "sEn": "His surname is Wang.", "ch": "Chapter 1"}, {"id": 220, "py": "wo", "pyT": "wǒ", "ph": "wwoh", "zh": "我", "en": "I, me", "pos": "pronoun", "sPy": "wo shi xuesheng", "sPyT": "Wǒ shì xuéshēng.", "sZh": "我是學生。", "sEn": "I am a student.", "ch": "Chapter 1"}, {"id": 221, "py": "jiao", "pyT": "jiào", "ph": "jyaow", "zh": "叫", "en": "to be called (by name of), to call", "pos": "verb", "sPy": "ni jiao shenme mingzi", "sPyT": "Nǐ jiào shénme míngzi?", "sZh": "你叫什麼名字？", "sEn": "What is your name?", "ch": "Chapter 1"}, {"id": 222, "py": "hao", "pyT": "hǎo", "ph": "haow", "zh": "好", "en": "to be good/well", "pos": "state verb", "sPy": "ni hao", "sPyT": "Nǐ hǎo!", "sZh": "你好！", "sEn": "Hello! / How are you?", "ch": "Chapter 1"}, {"id": 223, "py": "shi", "pyT": "shì", "ph": "shir", "zh": "是", "en": "to be (am, are, is)", "pos": "verb", "sPy": "wo shi Meiguoren", "sPyT": "Wǒ shì Měiguórén.", "sZh": "我是美國人。", "sEn": "I am American.", "ch": "Chapter 1"}, {"id": 224, "py": "Meiguoren", "pyT": "Měiguórén", "ph": "may-gwoh-run", "zh": "美國人", "en": "American", "pos": "noun", "sPy": "ta shi Meiguoren", "sPyT": "Tā shì Měiguórén.", "sZh": "他是美國人。", "sEn": "He is American.", "ch": "Chapter 1"}, {"id": 225, "py": "guo", "pyT": "guó", "ph": "gwoh", "zh": "國", "en": "country, nation", "pos": "noun", "sPy": "Zhongguo shi yi ge da guo", "sPyT": "Zhōngguó shì yī ge dà guo.", "sZh": "中國是一個大國。", "sEn": "China is a big country.", "ch": "Chapter 1"}, {"id": 226, "py": "ren", "pyT": "rén", "ph": "run", "zh": "人", "en": "person", "pos": "noun", "sPy": "ta shi na guo ren", "sPyT": "Tā shì nǎ guó rén?", "sZh": "他是哪國人？", "sEn": "What nationality is he?", "ch": "Chapter 1"}, {"id": 227, "py": "ma", "pyT": "ma", "ph": "mah", "zh": "嗎", "en": "a question particle", "pos": "particle", "sPy": "ni shi xuesheng ma", "sPyT": "Nǐ shì xuéshēng ma?", "sZh": "你是學生嗎？", "sEn": "Are you a student?", "ch": "Chapter 1"}, {"id": 228, "py": "bu", "pyT": "bù", "ph": "boo", "zh": "不", "en": "not", "pos": "adverb", "sPy": "wo bu shi Yingguo ren", "sPyT": "Wǒ bù shì Yīngguó rén.", "sZh": "我不是英國人。", "sEn": "I am not British.", "ch": "Chapter 1"}, {"id": 229, "py": "Yingguo", "pyT": "Yīngguó", "ph": "ying-gwoh", "zh": "英國", "en": "Great Britain", "pos": "noun", "sPy": "ta shi Yingguo ren", "sPyT": "Tā shì Yīngguó rén.", "sZh": "他是英國人。", "sEn": "He is British.", "ch": "Chapter 1"}, {"id": 230, "py": "ni", "pyT": "nǐ", "ph": "nee", "zh": "你", "en": "you", "pos": "pronoun", "sPy": "ni hao ma", "sPyT": "Nǐ hǎo ma?", "sZh": "你好嗎？", "sEn": "How are you?", "ch": "Chapter 1"}, {"id": 231, "py": "shenme", "pyT": "shénme", "ph": "shun-muh", "zh": "什麼", "en": "what?", "pos": "pronoun", "sPy": "zhe shi shenme", "sPyT": "Zhè shì shénme?", "sZh": "這是什麼？", "sEn": "What is this?", "ch": "Chapter 1"}, {"id": 232, "py": "mingzi", "pyT": "míngzi", "ph": "ming-dzuh", "zh": "名字", "en": "full name, first name, given name", "pos": "noun", "sPy": "wo de mingzi jiao Fang Durui", "sPyT": "Wǒ de míngzi jiào Fāng Dùruì.", "sZh": "我的名字叫方度瑞。", "sEn": "My name is Fang Durui.", "ch": "Chapter 1"}, {"id": 233, "py": "na", "pyT": "nǎ", "ph": "nah", "zh": "哪", "en": "which", "pos": "pronoun", "sPy": "ni shi na guo ren", "sPyT": "Nǐ shì nǎ guó rén?", "sZh": "你是哪國人？", "sEn": "Which country are you from?", "ch": "Chapter 1"}, {"id": 234, "py": "nei", "pyT": "něi", "ph": "nay", "zh": "哪", "en": "which (from na yi)", "pos": "pronoun", "sPy": "ni shi nei guo ren", "sPyT": "Nǐ shì něi guó rén?", "sZh": "你是哪國人？", "sEn": "Which country are you from?", "ch": "Chapter 1"}, {"id": 235, "py": "ne", "pyT": "ne", "ph": "nuh", "zh": "呢", "en": "a question particle", "pos": "particle", "sPy": "wo hen hao ni ne", "sPyT": "Wǒ hěn hǎo, nǐ ne?", "sZh": "我很好，你呢？", "sEn": "I'm very well, and you?", "ch": "Chapter 1"}, {"id": 236, "py": "Taiwan", "pyT": "Táiwān", "ph": "ty-wahn", "zh": "台灣", "en": "Taiwan", "pos": "noun", "sPy": "wo zai Taiwan xue Zhongwen", "sPyT": "Wǒ zài Táiwān xué Zhōngwén.", "sZh": "我在台灣學中文。", "sEn": "I study Chinese in Taiwan.", "ch": "Chapter 1"}, {"id": 237, "py": "Zhongguo", "pyT": "Zhōngguó", "ph": "johng-gwoh", "zh": "中國", "en": "China, Chinese", "pos": "noun", "sPy": "ta shi Zhongguo ren", "sPyT": "Tā shì Zhōngguó rén.", "sZh": "他是中國人。", "sEn": "He is Chinese.", "ch": "Chapter 1"}, {"id": 238, "py": "Ta", "pyT": "Tā", "ph": "tah", "zh": "他", "en": "he, him, she, her", "pos": "pronoun", "sPy": "ta shi wo de pengyou", "sPyT": "Tā shì wǒ de péngyou.", "sZh": "他是我的朋友。", "sEn": "He is my friend.", "ch": "Chapter 1"}, {"id": 239, "py": "Ta", "pyT": "Tā", "ph": "tah", "zh": "她", "en": "she, her", "pos": "pronoun", "sPy": "ta shi Taiwan ren", "sPyT": "Tā shì Táiwān rén.", "sZh": "她是台灣人。", "sEn": "She is Taiwanese.", "ch": "Chapter 1"}, {"id": 240, "py": "shei", "pyT": "shéi", "ph": "shay", "zh": "誰", "en": "who, whom", "pos": "pronoun", "sPy": "ta shi shei", "sPyT": "Tā shì shéi?", "sZh": "他是誰？", "sEn": "Who is he?", "ch": "Chapter 1"}, {"id": 241, "py": "Huaren", "pyT": "Huárén", "ph": "hwah-run", "zh": "華人", "en": "Ethnic Chinese, overseas Chinese, citizen of Chinese origin", "pos": "noun", "sPy": "henduo Huaren zhu zai Feilubin", "sPyT": "Hěnduō Huárén zhù zài Fēilǜbīn.", "sZh": "很多華人住在菲律賓。", "sEn": "Many ethnic Chinese live in the Philippines.", "ch": "Chapter 1"}, {"id": 242, "py": "zao", "pyT": "zǎo", "ph": "dzaow", "zh": "早", "en": "good morning", "pos": "phrase", "sPy": "Li laoshi zao", "sPyT": "Lǐ lǎoshī, zǎo!", "sZh": "李老師，早！", "sEn": "Good morning, Teacher Li!", "ch": "Chapter 2"}, {"id": 243, "py": "Zhao", "pyT": "Zhào", "ph": "jaow", "zh": "趙", "en": "common Chinese surname", "pos": "noun", "sPy": "ta xing Zhao", "sPyT": "Tā xìng Zhào.", "sZh": "他姓趙。", "sEn": "His surname is Zhao.", "ch": "Chapter 2"}, {"id": 244, "py": "xiaojie", "pyT": "xiǎojiě", "ph": "shyaow-jyeh", "zh": "小姐", "en": "Miss", "pos": "noun", "sPy": "Wang xiaojie ni hao", "sPyT": "Wáng xiǎojiě, nǐ hǎo!", "sZh": "王小姐，你好！", "sEn": "Hello, Miss Wang!", "ch": "Chapter 2"}, {"id": 245, "py": "Zhang", "pyT": "Zhāng", "ph": "jahng", "zh": "張", "en": "common Chinese surname", "pos": "noun", "sPy": "Zhang xiansheng hen mang", "sPyT": "Zhāng xiānshēng hěn máng.", "sZh": "張先生很忙。", "sEn": "Mr. Zhang is very busy.", "ch": "Chapter 2"}, {"id": 246, "py": "haojiubujian", "pyT": "hǎojiǔbùjiàn", "ph": "haow-jyoh-boo-jyen", "zh": "好久不見", "en": "long time no see", "pos": "phrase", "sPy": "haojiubujian ni hao ma", "sPyT": "Hǎojiǔbùjiàn! Nǐ hǎo ma?", "sZh": "好久不見！你好嗎？", "sEn": "Long time no see! How are you?", "ch": "Chapter 2"}, {"id": 247, "py": "jiu", "pyT": "jiǔ", "ph": "jyoh", "zh": "久", "en": "to be a long time", "pos": "state verb", "sPy": "wo deng le hen jiu", "sPyT": "Wǒ děng le hěn jiǔ.", "sZh": "我等了很久。", "sEn": "I waited for a very long time.", "ch": "Chapter 2"}, {"id": 248, "py": "jian", "pyT": "jiàn", "ph": "jyen", "zh": "見", "en": "to see, to meet", "pos": "verb", "sPy": "mingtian jian", "sPyT": "Míngtiān jiàn!", "sZh": "明天見！", "sEn": "See you tomorrow!", "ch": "Chapter 2"}, {"id": 249, "py": "a", "pyT": "a", "ph": "ah", "zh": "啊", "en": "phrase final particle, indicating affirmation, exclamation, etc; and interrogative final particle, used when the answer is assumed", "pos": "particle", "sPy": "shi a wo ye qu", "sPyT": "Shì a, wǒ yě qù!", "sZh": "是啊，我也去！", "sEn": "Yes, I am going too!", "ch": "Chapter 2"}, {"id": 250, "py": "hen", "pyT": "hěn", "ph": "hun", "zh": "很", "en": "very", "pos": "level adverb", "sPy": "jintian hen re", "sPyT": "Jīntiān hěn rè.", "sZh": "今天很熱。", "sEn": "Today is very hot.", "ch": "Chapter 2"}, {"id": 251, "py": "xiexie", "pyT": "xièxie", "ph": "shyeh-shyeh", "zh": "謝謝", "en": "to thank you", "pos": "verb", "sPy": "xiexie ni", "sPyT": "Xièxie nǐ!", "sZh": "謝謝你！", "sEn": "Thank you!", "ch": "Chapter 2"}, {"id": 252, "py": "ye", "pyT": "yě", "ph": "yeh", "zh": "也", "en": "also", "pos": "adverb", "sPy": "wo ye shi Meiguoren", "sPyT": "Wǒ yě shì Měiguórén.", "sZh": "我也是美國人。", "sEn": "I am also American.", "ch": "Chapter 2"}, {"id": 253, "py": "zhe", "pyT": "zhè", "ph": "juh", "zh": "這", "en": "this", "pos": "pronoun", "sPy": "zhe shi wo taitai", "sPyT": "Zhè shì wǒ tàitai.", "sZh": "這是我太太。", "sEn": "This is my wife.", "ch": "Chapter 2"}, {"id": 254, "py": "taitai", "pyT": "tàitai", "ph": "ty-ty", "zh": "太太", "en": "Mrs., wife", "pos": "noun", "sPy": "Li taitai hen hao", "sPyT": "Lǐ tàitai hěn hǎo.", "sZh": "李太太很好。", "sEn": "Mrs. Li is very well.", "ch": "Chapter 2"}, {"id": 255, "py": "nimen", "pyT": "nǐmen", "ph": "nee-mun", "zh": "你們", "en": "you (plural)", "pos": "pronoun", "sPy": "nimen dou hao ma", "sPyT": "Nǐmen dōu hǎo ma?", "sZh": "你們都好嗎？", "sEn": "Are you all well?", "ch": "Chapter 2"}, {"id": 256, "py": "men", "pyT": "men", "ph": "mun", "zh": "們", "en": "used after wo, ni, ta, or certain nouns denoting group of persons", "pos": "particle", "sPy": "xueshengmen dou qu shangke", "sPyT": "Xuéshēngmen dōu qù shàngkè.", "sZh": "學生們都去上課。", "sEn": "The students all go to class.", "ch": "Chapter 2"}, {"id": 257, "py": "women", "pyT": "wǒmen", "ph": "wwoh-mun", "zh": "我們", "en": "we, us", "pos": "pronoun", "sPy": "women qu shangke", "sPyT": "Wǒmen qù shàngkè.", "sZh": "我們去上課。", "sEn": "We are going to class.", "ch": "Chapter 2"}, {"id": 258, "py": "tamen", "pyT": "tāmen", "ph": "tah-mun", "zh": "他們", "en": "they, them", "pos": "pronoun", "sPy": "tamen dou hen mang", "sPyT": "Tāmen dōu hěn máng.", "sZh": "他們都很忙。", "sEn": "They are all very busy.", "ch": "Chapter 2"}, {"id": 259, "py": "tianqi", "pyT": "tiānqì", "ph": "tyen-chee", "zh": "天氣", "en": "weather", "pos": "noun", "sPy": "jintian tianqi hen hao", "sPyT": "Jīntiān tiānqì hěn hǎo.", "sZh": "今天天氣很好。", "sEn": "The weather today is very good.", "ch": "Chapter 2"}, {"id": 260, "py": "re", "pyT": "rè", "ph": "ruh", "zh": "熱", "en": "to be hot", "pos": "state verb", "sPy": "tianqi tai re le", "sPyT": "Tiānqì tài rè le.", "sZh": "天氣太熱了。", "sEn": "The weather is too hot.", "ch": "Chapter 2"}, {"id": 261, "py": "mang", "pyT": "máng", "ph": "mahng", "zh": "忙", "en": "to be busy", "pos": "state verb", "sPy": "wo hen mang", "sPyT": "Wǒ hěn máng.", "sZh": "我很忙。", "sEn": "I am very busy.", "ch": "Chapter 2"}, {"id": 262, "py": "tai", "pyT": "tài", "ph": "ty", "zh": "太", "en": "too", "pos": "adverb", "sPy": "jintian tai leng le", "sPyT": "Jīntiān tài lěng le.", "sZh": "今天太冷了。", "sEn": "Today is too cold.", "ch": "Chapter 2"}, {"id": 263, "py": "qu", "pyT": "qù", "ph": "chyoo", "zh": "去", "en": "to go", "pos": "verb", "sPy": "wo qu Taiwan", "sPyT": "Wǒ qù Táiwān.", "sZh": "我去台灣。", "sEn": "I am going to Taiwan.", "ch": "Chapter 2"}, {"id": 264, "py": "shangke", "pyT": "shàngkè", "ph": "shahng-kuh", "zh": "上課", "en": "to go to class, to attend class", "pos": "verb", "sPy": "women qu shangke ba", "sPyT": "Wǒmen qù shàngkè ba.", "sZh": "我們去上課吧。", "sEn": "Let's go to class.", "ch": "Chapter 2"}, {"id": 265, "py": "zaijian", "pyT": "zàijiàn", "ph": "dzy-jyen", "zh": "再見", "en": "see you again", "pos": "phrase", "sPy": "laoshi zaijian", "sPyT": "Lǎoshī, zàijiàn!", "sZh": "老師，再見！", "sEn": "Goodbye, Teacher!", "ch": "Chapter 2"}, {"id": 266, "py": "leng", "pyT": "lěng", "ph": "lung", "zh": "冷", "en": "to be cold", "pos": "state verb", "sPy": "jintian hen leng", "sPyT": "Jīntiān hěn lěng.", "sZh": "今天很冷。", "sEn": "Today is very cold.", "ch": "Chapter 2"}, {"id": 267, "py": "xi huan", "pyT": "xǐhuān", "ph": "shee-hwahn", "zh": "喜歡", "en": "to like", "pos": "verb", "sPy": "wo xi huan kan dianying", "sPyT": "Wǒ xǐhuān kàn diànyǐng.", "sZh": "我喜歡看電影。", "sEn": "I like watching movies.", "ch": "Chapter 3"}, {"id": 268, "py": "kan", "pyT": "kàn", "ph": "kahn", "zh": "看", "en": "to watch, to read, to look at", "pos": "verb", "sPy": "ta xi huan kan shu", "sPyT": "Tā xǐhuān kàn shū.", "sZh": "他喜歡看書。", "sEn": "He likes reading books.", "ch": "Chapter 3"}, {"id": 269, "py": "dianying", "pyT": "diànyǐng", "ph": "dyen-ying", "zh": "電影", "en": "movie", "pos": "noun", "sPy": "zhe ge dianying hen haokan", "sPyT": "Zhè ge diànyǐng hěn hǎokàn.", "sZh": "這個電影很好看。", "sEn": "This movie is very good to watch.", "ch": "Chapter 3"}, {"id": 270, "py": "dianshi", "pyT": "diànshì", "ph": "dyen-shir", "zh": "電視", "en": "tv", "pos": "noun", "sPy": "baba zai kan dianshi", "sPyT": "Bàba zài kàn diànshì.", "sZh": "爸爸在看電視。", "sEn": "Dad is watching TV.", "ch": "Chapter 3"}, {"id": 271, "py": "dou", "pyT": "dōu", "ph": "doh", "zh": "都", "en": "all", "pos": "adverb", "sPy": "women dou shi xuesheng", "sPyT": "Wǒmen dōu shì xuéshēng.", "sZh": "我們都是學生。", "sEn": "We are all students.", "ch": "Chapter 3"}, {"id": 272, "py": "you", "pyT": "yǒu", "ph": "yoh", "zh": "有", "en": "to have, there is, there are", "pos": "verb", "sPy": "wo you liang ben shu", "sPyT": "Wǒ yǒu liǎng běn shū.", "sZh": "我有兩本書。", "sEn": "I have two books.", "ch": "Chapter 3"}, {"id": 273, "py": "mei", "pyT": "méi", "ph": "may", "zh": "沒", "en": "not have", "pos": "adverb", "sPy": "wo mei you qiche", "sPyT": "Wǒ méi yǒu qìchē.", "sZh": "我沒有汽車。", "sEn": "I don't have a car.", "ch": "Chapter 3"}, {"id": 274, "py": "yao", "pyT": "yào", "ph": "yaow", "zh": "要", "en": "to want", "pos": "verb", "sPy": "wo yao mai shu", "sPyT": "Wǒ yào mǎi shū.", "sZh": "我要買書。", "sEn": "I want to buy books.", "ch": "Chapter 3"}, {"id": 275, "py": "qiche", "pyT": "qìchē", "ph": "chee-chuh", "zh": "汽車", "en": "automobile car", "pos": "noun", "sPy": "ta you yi liang qiche", "sPyT": "Tā yǒu yī liàng qìchē.", "sZh": "他有一輛汽車。", "sEn": "He has an automobile.", "ch": "Chapter 3"}, {"id": 276, "py": "che", "pyT": "chē", "ph": "chuh", "zh": "車", "en": "car", "pos": "noun", "sPy": "zhe liang che hen gui", "sPyT": "Zhè liàng chē hěn guì.", "sZh": "這輛車很貴。", "sEn": "This car is very expensive.", "ch": "Chapter 3"}, {"id": 277, "py": "mai", "pyT": "mǎi", "ph": "my", "zh": "買", "en": "buy", "pos": "verb", "sPy": "wo yao mai bi", "sPyT": "Wǒ yào mǎi bǐ.", "sZh": "我要買筆。", "sEn": "I want to buy a pen.", "ch": "Chapter 3"}, {"id": 278, "py": "mai", "pyT": "mài", "ph": "my", "zh": "賣", "en": "sell", "pos": "verb", "sPy": "zhe jia dian mai shu", "sPyT": "Zhè jiā diàn mài shū.", "sZh": "這家店賣書。", "sEn": "This store sells books.", "ch": "Chapter 3"}, {"id": 279, "py": "haokan", "pyT": "hǎokàn", "ph": "haow-kahn", "zh": "好看", "en": "good to look", "pos": "state verb", "sPy": "zhe ben shu hen haokan", "sPyT": "Zhè běn shū hěn hǎokàn.", "sZh": "這本書很好看。", "sEn": "This book is very good to look at / interesting.", "ch": "Chapter 3"}, {"id": 280, "py": "keshi", "pyT": "kěshì", "ph": "kuh-shir", "zh": "可是", "en": "but", "pos": "conjunction", "sPy": "zhe ge hen haokan keshi hen gui", "sPyT": "Zhè ge hěn hǎokàn, kěshì hěn guì.", "sZh": "這個很好看，可是很貴。", "sEn": "This one is very nice, but it is very expensive.", "ch": "Chapter 3"}, {"id": 281, "py": "gui", "pyT": "guì", "ph": "gway", "zh": "貴", "en": "expensive", "pos": "state verb", "sPy": "na liang qiche hen gui", "sPyT": "Nà liàng qìchē hěn guì.", "sZh": "那輛汽車很貴。", "sEn": "That car is very expensive.", "ch": "Chapter 3"}, {"id": 282, "py": "shu", "pyT": "shū", "ph": "shoo", "zh": "書", "en": "book", "pos": "noun", "sPy": "wo you henduo Zhongwen shu", "sPyT": "Wǒ yǒu hěnduō Zhōngwén shū.", "sZh": "我有很多中文書。", "sEn": "I have many Chinese books.", "ch": "Chapter 3"}, {"id": 283, "py": "Riben", "pyT": "Rìběn", "ph": "rir-bun", "zh": "日本", "en": "Japan", "pos": "noun", "sPy": "ta shi Riben ren", "sPyT": "Tā shì Rìběn rén.", "sZh": "他是日本人。", "sEn": "He is Japanese.", "ch": "Chapter 3"}, {"id": 284, "py": "Riwen", "pyT": "Rìwén", "ph": "rir-wun", "zh": "日文", "en": "Japanese Language", "pos": "noun", "sPy": "wo xi huan kan Riwen shu", "sPyT": "Wǒ xǐhuān kàn Rìwén shū.", "sZh": "我喜歡看日文書。", "sEn": "I like reading Japanese books.", "ch": "Chapter 3"}, {"id": 285, "py": "bi", "pyT": "bǐ", "ph": "bee", "zh": "筆", "en": "pen", "pos": "noun", "sPy": "zhe shi wo de bi", "sPyT": "Zhè shì wǒ de bǐ.", "sZh": "這是我的筆。", "sEn": "This is my pen.", "ch": "Chapter 3"}, {"id": 286, "py": "Deguo", "pyT": "Déguó", "ph": "duh-gwoh", "zh": "德國", "en": "Germany", "pos": "noun", "sPy": "ta qu Deguo", "sPyT": "Tā qù Déguó.", "sZh": "他去德國。", "sEn": "He is going to Germany.", "ch": "Chapter 3"}, {"id": 287, "py": "Dewen", "pyT": "Déwén", "ph": "duh-wun", "zh": "德文", "en": "German Language", "pos": "noun", "sPy": "ta hui shuo Dewen", "sPyT": "Tā huì shuō Déwén.", "sZh": "他會說德文。", "sEn": "He can speak German.", "ch": "Chapter 3"}, {"id": 288, "py": "Yingguo", "pyT": "Yīngguó", "ph": "ying-gwoh", "zh": "英國", "en": "England, Great Britain", "pos": "noun", "sPy": "ta shi Yingguo ren", "sPyT": "Tā shì Yīngguó rén.", "sZh": "他是英國人。", "sEn": "He is British.", "ch": "Chapter 3"}, {"id": 289, "py": "Yingwen", "pyT": "Yīngwén", "ph": "ying-wun", "zh": "英文", "en": "English Language", "pos": "noun", "sPy": "wo you Yingwen bao", "sPyT": "Wǒ yǒu Yīngwén bào.", "sZh": "我有英文報。", "sEn": "I have an English newspaper.", "ch": "Chapter 3"}, {"id": 290, "py": "bao", "pyT": "bào", "ph": "baow", "zh": "報", "en": "newspaper", "pos": "noun", "sPy": "baba zai kan bao", "sPyT": "Bàba zài kàn bào.", "sZh": "爸爸在看報。", "sEn": "Dad is reading the newspaper.", "ch": "Chapter 3"}, {"id": 291, "py": "Meiguo", "pyT": "Měiguó", "ph": "may-gwoh", "zh": "美國", "en": "America, American", "pos": "noun", "sPy": "wo shi Meiguo ren", "sPyT": "Wǒ shì Měiguó rén.", "sZh": "我是美國人。", "sEn": "I am American.", "ch": "Chapter 3"}, {"id": 292, "py": "Hanguo", "pyT": "Hánguó", "ph": "hahn-gwoh", "zh": "韓國", "en": "Korea, South Korea", "pos": "noun", "sPy": "ta shi Hanguo ren", "sPyT": "Tā shì Hánguó rén.", "sZh": "她是韓國人。", "sEn": "She is Korean.", "ch": "Chapter 3"}, {"id": 293, "py": "Hanwen", "pyT": "Hánwén", "ph": "hahn-wun", "zh": "韓文", "en": "Korean Language", "pos": "noun", "sPy": "wo xi huan kan Hanwen dianying", "sPyT": "Wǒ xǐhuān kàn Hánwén diànyǐng.", "sZh": "我喜歡看韓文電影。", "sEn": "I like watching Korean movies.", "ch": "Chapter 3"}, {"id": 294, "py": "Fawen", "pyT": "Fǎwén", "ph": "fah-wun", "zh": "法文", "en": "French Language", "pos": "noun", "sPy": "zhe shi Fawen shu", "sPyT": "Zhè shì Fǎwén shū.", "sZh": "這是法文書。", "sEn": "This is a French book.", "ch": "Chapter 3"}, {"id": 295, "py": "Faguo", "pyT": "Fǎguó", "ph": "fah-gwoh", "zh": "法國", "en": "France", "pos": "noun", "sPy": "Faguo hen haokan", "sPyT": "Fǎguó hěn hǎokàn.", "sZh": "法國很好看。", "sEn": "France is very pretty.", "ch": "Chapter 3"}, {"id": 296, "py": "wen", "pyT": "wén", "ph": "wun", "zh": "文", "en": "written language", "pos": "noun", "sPy": "wo xue Zhongwen", "sPyT": "Wǒ xué Zhōngwén.", "sZh": "我學中文。", "sEn": "I study Chinese.", "ch": "Chapter 3"}, {"id": 297, "py": "dongxi", "pyT": "dōngxi", "ph": "dohng-shee", "zh": "東西", "en": "thing", "pos": "noun", "sPy": "zhe ge dongxi hen gui", "sPyT": "Zhè ge dōngxi hěn guì.", "sZh": "這個東西很貴。", "sEn": "This thing is very expensive.", "ch": "Chapter 3"}, {"id": 298, "py": "dong", "pyT": "dǒng", "ph": "dohng", "zh": "懂", "en": "to know, to understand", "pos": "verb", "sPy": "wo dong Zhongwen", "sPyT": "Wǒ dǒng Zhōngwén.", "sZh": "我懂中文。", "sEn": "I understand Chinese.", "ch": "Chapter 3"}, {"id": 299, "py": "zhe", "pyT": "zhè", "ph": "jay / juh", "zh": "這", "en": "this", "pos": "pronoun", "sPy": "zhe shi wo de peng you", "sPyT": "Zhè shì wǒ de péngyǒu.", "sZh": "這是我的朋友。", "sEn": "This is my friend.", "ch": "Chapter 4"}, {"id": 300, "py": "duo shao", "pyT": "duōshǎo", "ph": "dwoh-shaow", "zh": "多少", "en": "how many", "pos": "pronoun", "sPy": "ni men ban you duo shao xue sheng", "sPyT": "Nǐmen bān yǒu duōshǎo xuéshēng?", "sZh": "你們班有多少學生？", "sEn": "How many students are in your class?", "ch": "Chapter 4"}, {"id": 301, "py": "duo", "pyT": "duō", "ph": "dwoh", "zh": "多", "en": "many, more", "pos": "state verb", "sPy": "jin tian de gong ke hen duo", "sPyT": "Jīntiān de gōngkè hěn duō.", "sZh": "今天的功課很多。", "sEn": "There is a lot of homework today.", "ch": "Chapter 4"}, {"id": 302, "py": "shao", "pyT": "shǎo", "ph": "shaow", "zh": "少", "en": "few, less", "pos": "state verb", "sPy": "wo de ling qian hen shao", "sPyT": "Wǒ de língqián hěn shǎo.", "sZh": "我的零錢很少。", "sEn": "I have very little change.", "ch": "Chapter 4"}, {"id": 303, "py": "qian", "pyT": "qián", "ph": "chyen", "zh": "錢", "en": "money", "pos": "noun", "sPy": "zhe ge bao bao duo shao qian", "sPyT": "Zhè ge bāobāo duōshǎo qián?", "sZh": "這個包包多少錢？", "sEn": "How much money is this bag?", "ch": "Chapter 4"}, {"id": 304, "py": "zhong", "pyT": "zhǒng", "ph": "johng", "zh": "種", "en": "type", "pos": "measure word", "sPy": "zhe zhong cha hen haohe", "sPyT": "Zhè zhǒng chá hěn hǎohē.", "sZh": "這種茶很好喝。", "sEn": "This type of tea is very tasty.", "ch": "Chapter 4"}, {"id": 305, "py": "kuai", "pyT": "kuài", "ph": "kwai", "zh": "塊", "en": "measure word for dollar", "pos": "measure word", "sPy": "yi bei cha san shi kuai", "sPyT": "Yī bēi chá sānshí kuài.", "sZh": "一杯茶三十塊。", "sEn": "One cup of tea is thirty dollars.", "ch": "Chapter 4"}, {"id": 306, "py": "ji", "pyT": "jǐ", "ph": "jee", "zh": "幾", "en": "a few, several, how many", "pos": "pronoun", "sPy": "ni yao mai ji ben shu", "sPyT": "Nǐ yào mǎi jǐ běn shū?", "sZh": "你要買幾本書？", "sEn": "How many books do you want to buy?", "ch": "Chapter 4"}, {"id": 307, "py": "liang", "pyT": "liǎng", "ph": "lyahng", "zh": "兩", "en": "two", "pos": "numeral", "sPy": "wo yao liang bei yin liao", "sPyT": "Wǒ yào liǎng bēi yǐnliào.", "sZh": "我要兩杯飲料。", "sEn": "I want two cups of drinks.", "ch": "Chapter 4"}, {"id": 308, "py": "ling qian", "pyT": "língqián", "ph": "ling-chyen", "zh": "零錢", "en": "change, coins", "pos": "noun", "sPy": "qing wen ni you ling qian ma", "sPyT": "Qǐngwèn nǐ yǒu língqián ma?", "sZh": "請問你有零錢嗎？", "sEn": "Excuse me, do you have any change?", "ch": "Chapter 4"}, {"id": 309, "py": "ling", "pyT": "líng", "ph": "ling", "zh": "零", "en": "zero", "pos": "numeral", "sPy": "yi bai ling wu kuai", "sPyT": "Yībǎi líng wǔ kuài.", "sZh": "一百零五塊。", "sEn": "One hundred and five dollars.", "ch": "Chapter 4"}, {"id": 310, "py": "gei", "pyT": "gěi", "ph": "gay", "zh": "給", "en": "give", "pos": "verb", "sPy": "qing gei wo yi bei shui", "sPyT": "Qǐng gěi wǒ yī bēi shuǐ.", "sZh": "請給我一杯水。", "sEn": "Please give me a cup of water.", "ch": "Chapter 4"}, {"id": 311, "py": "qing", "pyT": "qǐng", "ph": "ching", "zh": "請", "en": "please, to request, to invite", "pos": "verb", "sPy": "qing jin, qing zuo", "sPyT": "Qǐng jìn, qǐng zuò.", "sZh": "請進，請坐。", "sEn": "Please come in, please sit down.", "ch": "Chapter 4"}, {"id": 312, "py": "zhaoqian", "pyT": "zhǎoqián", "ph": "jaow-chyen", "zh": "找錢", "en": "to give change to someone after a purchase", "pos": "verb", "sPy": "zhaoqian gei nin wu shi kuai", "sPyT": "Zhǎoqián gěi nín wǔshí kuài.", "sZh": "找錢給您五十塊。", "sEn": "Here is your fifty dollars change.", "ch": "Chapter 4"}, {"id": 313, "py": "ge", "pyT": "gè", "ph": "guh", "zh": "個", "en": "general measure word", "pos": "measure word", "sPy": "wo yao mai yi ge dan gao", "sPyT": "Wǒ yào mǎi yī ge dàngāo.", "sZh": "我要買一個蛋糕。", "sEn": "I want to buy a cake.", "ch": "Chapter 4"}, {"id": 314, "py": "han/he", "pyT": "hàn / hé", "ph": "hahn / huh", "zh": "和", "en": "and, together with", "pos": "conjunction", "sPy": "wo he gege dou xihuan da qiu", "sPyT": "Wǒ hé gēge dōu xǐhuān dǎqiú.", "sZh": "我和哥哥都喜歡打球。", "sEn": "Both my older brother and I like playing ball sports.", "ch": "Chapter 4"}, {"id": 315, "py": "bei", "pyT": "bēi", "ph": "bay", "zh": "杯", "en": "cup", "pos": "measure word", "sPy": "wo yao yi bei re ka fei", "sPyT": "Wǒ yào yī bēi rè kāfēi.", "sZh": "我要一杯熱咖啡。", "sEn": "I want one cup of hot coffee.", "ch": "Chapter 4"}, {"id": 316, "py": "yi gong", "pyT": "yīgòng", "ph": "ee-gohng", "zh": "一共", "en": "altogether, in total", "pos": "adverb", "sPy": "yi gong liang bai kuai qian", "sPyT": "Yīgòng liǎngbǎi kuài qián.", "sZh": "一共兩百塊錢。", "sEn": "Altogether it is two hundred dollars.", "ch": "Chapter 4"}, {"id": 317, "py": "mao", "pyT": "máo", "ph": "maow", "zh": "毛", "en": "dime (10 cents)", "pos": "measure word", "sPy": "yi kuai qian you shi mao", "sPyT": "Yī kuài qián yǒu shí máo.", "sZh": "一塊錢有十毛。", "sEn": "One dollar has ten dimes.", "ch": "Chapter 4"}, {"id": 318, "py": "fen", "pyT": "fēn", "ph": "fun", "zh": "分", "en": "cent", "pos": "measure word", "sPy": "yi mao you shi fen", "sPyT": "Yī máo yǒu shí fēn.", "sZh": "一毛有十分。", "sEn": "One dime has ten cents.", "ch": "Chapter 4"}, {"id": 319, "py": "ban", "pyT": "bàn", "ph": "bahn", "zh": "半", "en": "half", "pos": "numeral", "sPy": "wo yao ban bei ka fei", "sPyT": "Wǒ yào bàn bēi kāfēi.", "sZh": "我要半杯咖啡。", "sEn": "I want half a cup of coffee.", "ch": "Chapter 4"}, {"id": 320, "py": "wei", "pyT": "wèi", "ph": "way", "zh": "位", "en": "polite measure word for people", "pos": "measure word", "sPy": "qing wen ji wei yongcan", "sPyT": "Qǐngwèn jǐ wèi yòngcān?", "sZh": "請問幾位用餐？", "sEn": "Excuse me, how many people are dining?", "ch": "Chapter 4"}, {"id": 321, "py": "ben", "pyT": "běn", "ph": "bun", "zh": "本", "en": "measure word for books / volume", "pos": "measure word", "sPy": "wo mai le san ben zhong wen shu", "sPyT": "Wǒ mǎi le sān běn Zhōngwén shū.", "sZh": "我買了三本中文書。", "sEn": "I bought three Chinese books.", "ch": "Chapter 4"}, {"id": 322, "py": "na", "pyT": "nà", "ph": "nah / nay", "zh": "那", "en": "that", "pos": "pronoun", "sPy": "na shi shei de bei zi", "sPyT": "Nà shì shéi de bēizi?", "sZh": "那是誰的杯子？", "sEn": "Whose cup is that?", "ch": "Chapter 4"}, {"id": 323, "py": "jia", "pyT": "jiā", "ph": "jyah", "zh": "家", "en": "family, home", "pos": "noun", "sPy": "wo jia you wu ge ren", "sPyT": "Wǒ jiā yǒu wǔ ge rén.", "sZh": "我家有五個人。", "sEn": "There are five people in my family.", "ch": "Chapter 5"}, {"id": 324, "py": "baba", "pyT": "bàba", "ph": "bah-bah", "zh": "爸爸", "en": "father, dad", "pos": "noun", "sPy": "wo baba shi yisheng", "sPyT": "Wǒ bàba shì yīshēng.", "sZh": "我爸爸是醫生。", "sEn": "My dad is a doctor.", "ch": "Chapter 5"}, {"id": 325, "py": "mama", "pyT": "māma", "ph": "mah-mah", "zh": "媽媽", "en": "mother, mom", "pos": "noun", "sPy": "wo mama hen piaoliang", "sPyT": "Wǒ māma hěn piàoliàng.", "sZh": "我媽媽很漂亮。", "sEn": "My mom is very pretty.", "ch": "Chapter 5"}, {"id": 326, "py": "de", "pyT": "de", "ph": "duh", "zh": "的", "en": "possessive / descriptive particle ('s, of)", "pos": "particle", "sPy": "zhe shi wo de xiang pian", "sPyT": "Zhè shì wǒ de xiàngpiàn.", "sZh": "這是我的相片。", "sEn": "This is my photo.", "ch": "Chapter 5"}, {"id": 327, "py": "xiang pian", "pyT": "xiàngpiàn", "ph": "shyahng-pyen", "zh": "相片", "en": "photo, photograph", "pos": "noun", "sPy": "zhe zhang xiang pian hen haokan", "sPyT": "Zhè zhāng xiàngpiàn hěn hǎokàn.", "sZh": "這張相片很好看。", "sEn": "This photo looks very nice.", "ch": "Chapter 5"}, {"id": 328, "py": "laoshi", "pyT": "lǎoshī", "ph": "laow-shir", "zh": "老師", "en": "teacher", "pos": "noun", "sPy": "wo de zhong wen laoshi hen hao", "sPyT": "Wǒ de Zhōngwén lǎoshī hěn hǎo.", "sZh": "我的中文老師很好。", "sEn": "My Chinese teacher is very nice.", "ch": "Chapter 5"}, {"id": 329, "py": "dui", "pyT": "duì", "ph": "dway", "zh": "對", "en": "right, correct", "pos": "state verb", "sPy": "ni shuo de hen dui", "sPyT": "Nǐ shuō de hěn duì.", "sZh": "你說得很對。", "sEn": "What you said is very right.", "ch": "Chapter 5"}, {"id": 330, "py": "zhang", "pyT": "zhāng", "ph": "jahng", "zh": "張", "en": "measure word for flat objects (photos, paper)", "pos": "measure word", "sPy": "zhe shi yi zhang quanjiapu", "sPyT": "Zhè shì yī zhāng quánjiāfú.", "sZh": "這是一張全家福。", "sEn": "This is a family photo.", "ch": "Chapter 5"}, {"id": 331, "py": "gege", "pyT": "gēge", "ph": "guh-guh", "zh": "哥哥", "en": "older brother", "pos": "noun", "sPy": "wo gege zai Mei guo gongzuo", "sPyT": "Wǒ gēge zài Měiguó gōngzuò.", "sZh": "我哥哥在美國工作。", "sEn": "My older brother works in America.", "ch": "Chapter 5"}, {"id": 332, "py": "haishi", "pyT": "háishì", "ph": "hai-shir", "zh": "還是", "en": "or (in questions)", "pos": "conjunction", "sPy": "ta shi ni gege haishi didi", "sPyT": "Tā shì nǐ gēge háishì dìdi?", "sZh": "他是你哥哥還是弟弟？", "sEn": "Is he your older brother or younger brother?", "ch": "Chapter 5"}, {"id": 333, "py": "didi", "pyT": "dìdi", "ph": "dee-dee", "zh": "弟弟", "en": "younger brother", "pos": "noun", "sPy": "wo didi shi xue sheng", "sPyT": "Wǒ dìdi shì xuéshēng.", "sZh": "我弟弟是學生。", "sEn": "My younger brother is a student.", "ch": "Chapter 5"}, {"id": 334, "py": "nu haizi", "pyT": "nǚ háizi", "ph": "nyoo hai-dzuh", "zh": "女孩子", "en": "girl", "pos": "noun", "sPy": "na ge nu haizi shi wo meimei", "sPyT": "Nà ge nǚ háizi shì wǒ mèimei.", "sZh": "那個女孩子是我妹妹。", "sEn": "That girl is my younger sister.", "ch": "Chapter 5"}, {"id": 335, "py": "nu haizi", "pyT": "nǚ háizi", "ph": "nyoo hai-dzuh", "zh": "女孩子", "en": "girl", "pos": "noun", "sPy": "zhe ge nu haizi hen congmin", "sPyT": "Zhè ge nǚ háizi hěn cōngmíng.", "sZh": "這個女孩子很聰明。", "sEn": "This girl is very smart.", "ch": "Chapter 5"}, {"id": 336, "py": "nuren", "pyT": "nǚrén", "ph": "nyoo-run", "zh": "女人", "en": "woman", "pos": "noun", "sPy": "na wei nuren shi Wang xiao jie", "sPyT": "Nà wèi nǚrén shì Wáng xiǎojiě.", "sZh": "那位女人是王小姐。", "sEn": "That woman is Miss Wang.", "ch": "Chapter 5"}, {"id": 337, "py": "nu pengyou", "pyT": "nǚ péngyǒu", "ph": "nyoo pung-yoh", "zh": "女朋友", "en": "girlfriend", "pos": "noun", "sPy": "ta shi wo gege de nu pengyou", "sPyT": "Tā shì wǒ gēge de nǚ péngyǒu.", "sZh": "她是我哥哥的女朋友。", "sEn": "She is my older brother's girlfriend.", "ch": "Chapter 5"}, {"id": 338, "py": "haizi", "pyT": "háizi", "ph": "hai-dzuh", "zh": "孩子", "en": "child, children", "pos": "noun", "sPy": "zhe xie haizi dou hen keai", "sPyT": "Zhèxiē háizi dōu hěn kě'ài.", "sZh": "這些孩子都很可愛。", "sEn": "These children are all very cute.", "ch": "Chapter 5"}, {"id": 339, "py": "zi", "pyT": "zǐ", "ph": "dzuh", "zh": "子", "en": "child, son; noun suffix", "pos": "noun", "sPy": "zhe shi yi ge bei zi", "sPyT": "Zhè shì yī ge bēizi.", "sZh": "這是一個杯子。", "sEn": "This is a cup.", "ch": "Chapter 5"}, {"id": 340, "py": "jie jie", "pyT": "jiějie", "ph": "jyeh-jyeh", "zh": "姐姐", "en": "older sister", "pos": "noun", "sPy": "wo jie jie zai Tai bei shangban", "sPyT": "Wǒ jiějie zài Táiběi shàngbān.", "sZh": "我姐姐在台北上班。", "sEn": "My older sister works in Taipei.", "ch": "Chapter 5"}, {"id": 341, "py": "peng you", "pyT": "péngyǒu", "ph": "pung-yoh", "zh": "朋友", "en": "friend", "pos": "noun", "sPy": "wo you hen duo Taiwan peng you", "sPyT": "Wǒ yǒu hěn duō Táiwān péngyǒu.", "sZh": "我有很多台灣朋友。", "sEn": "I have many Taiwanese friends.", "ch": "Chapter 5"}, {"id": 342, "py": "zhei xie", "pyT": "zhèixiē", "ph": "jay-shyeh", "zh": "這些", "en": "these", "pos": "pronoun", "sPy": "zhei xie shu dou shi wo de", "sPyT": "Zhèixiē shū dōu shì wǒ de.", "sZh": "這些書都是我的。", "sEn": "All of these books are mine.", "ch": "Chapter 5"}, {"id": 343, "py": "yixie", "pyT": "yīxiē", "ph": "ee-shyeh", "zh": "一些", "en": "some, a few", "pos": "phrase", "sPy": "wo xiang mai yixie shuiguo", "sPyT": "Wǒ xiǎng mǎi yīxiē shuǐguǒ.", "sZh": "我想買一些水果。", "sEn": "I want to buy some fruit.", "ch": "Chapter 5"}, {"id": 344, "py": "neixie", "pyT": "nèixiē", "ph": "nay-shyeh", "zh": "那些", "en": "those", "pos": "pronoun", "sPy": "neixie ren shi shei", "sPyT": "Nèixiē rén shì shéi?", "sZh": "那些人是誰？", "sEn": "Who are those people?", "ch": "Chapter 5"}, {"id": 345, "py": "you de", "pyT": "yǒude", "ph": "yoh-duh", "zh": "有的", "en": "some (of them)", "pos": "pronoun", "sPy": "xue sheng you de hen gao, you de hen ai", "sPyT": "Xuéshēng yǒude hěn gāo, yǒude hěn ǎi.", "sZh": "學生有的很高，有的很矮。", "sEn": "Some of the students are tall, and some are short.", "ch": "Chapter 5"}, {"id": 346, "py": "bo bo", "pyT": "bóbo", "ph": "bwoh-bwoh", "zh": "伯伯", "en": "uncle (father's older brother)", "pos": "noun", "sPy": "bo bo shi baba de gege", "sPyT": "Bóbo shì bàba de gēge.", "sZh": "伯伯是爸爸的哥哥。", "sEn": "Uncle (bobo) is dad's older brother.", "ch": "Chapter 5"}, {"id": 347, "py": "liang", "pyT": "liǎng", "ph": "lyahng", "zh": "兩", "en": "two (used before measure words)", "pos": "numeral", "sPy": "wo you liang ge jie jie", "sPyT": "Wǒ yǒu liǎng ge jiějie.", "sZh": "我有兩個姐姐。", "sEn": "I have two older sisters.", "ch": "Chapter 5"}, {"id": 348, "py": "zhi", "pyT": "zhī", "ph": "jir", "zh": "隻", "en": "measure word for animals (cats, dogs)", "pos": "measure word", "sPy": "wo jia you yi zhi gou", "sPyT": "Wǒ jiā yǒu yī zhī gǒu.", "sZh": "我家有一隻狗。", "sEn": "My family has one dog.", "ch": "Chapter 5"}, {"id": 349, "py": "mao", "pyT": "māo", "ph": "maow", "zh": "貓", "en": "cat", "pos": "noun", "sPy": "zhe zhi mao hen keai", "sPyT": "Zhè zhī māo hěn kě'ài.", "sZh": "這隻貓很可愛。", "sEn": "This cat is very cute.", "ch": "Chapter 5"}, {"id": 350, "py": "gou", "pyT": "gǒu", "ph": "goh", "zh": "狗", "en": "dog", "pos": "noun", "sPy": "na zhi gou pao de hen kuai", "sPyT": "Nà zhī gǒu pǎo de hěn kuài.", "sZh": "那隻狗跑得很快。", "sEn": "That dog runs very fast.", "ch": "Chapter 5"}, {"id": 351, "py": "nuer", "pyT": "nǚ'ér", "ph": "nyoo-ar", "zh": "女兒", "en": "daughter", "pos": "noun", "sPy": "Wang laoshi you yi ge nuer", "sPyT": "Wáng lǎoshī yǒu yī ge nǚ'ér.", "sZh": "王老師有一個女兒。", "sEn": "Teacher Wang has a daughter.", "ch": "Chapter 5"}, {"id": 352, "py": "er", "pyT": "ér", "ph": "ar", "zh": "兒", "en": "son, child", "pos": "noun", "sPy": "ta shi wo de xiao er", "sPyT": "Tā shì wǒ de xiǎo ér.", "sZh": "他是我的小兒。", "sEn": "He is my young son.", "ch": "Chapter 5"}, {"id": 353, "py": "erzi", "pyT": "érzi", "ph": "ar-dzuh", "zh": "兒子", "en": "son", "pos": "noun", "sPy": "Li xian sheng you liang ge erzi", "sPyT": "Lǐ xiānshēng yǒu liǎng ge érzi.", "sZh": "李先生有兩個兒子。", "sEn": "Mr. Li has two sons.", "ch": "Chapter 5"}, {"id": 354, "py": "nan peng you", "pyT": "nán péngyǒu", "ph": "nahn pung-yoh", "zh": "男朋友", "en": "boyfriend", "pos": "noun", "sPy": "ta you nan peng you le ma", "sPyT": "Tā yǒu nán péngyǒu le ma?", "sZh": "她有男朋友了嗎？", "sEn": "Does she have a boyfriend yet?", "ch": "Chapter 5"}, {"id": 355, "py": "xue sheng", "pyT": "xuéshēng", "ph": "shweh-shung", "zh": "學生", "en": "student", "pos": "noun", "sPy": "wo shi zhong wen xue sheng", "sPyT": "Wǒ shì Zhōngwén xuéshēng.", "sZh": "我是中文學生。", "sEn": "I am a Chinese language student.", "ch": "Chapter 5"}, {"id": 356, "py": "mei mei", "pyT": "mèimei", "ph": "may-may", "zh": "妹妹", "en": "younger sister", "pos": "noun", "sPy": "wo mei mei hen xi huan kan man hua", "sPyT": "Wǒ mèimei hěn xǐhuān kàn mànhuà.", "sZh": "我妹妹很喜歡看漫畫。", "sEn": "My younger sister likes reading comics very much.", "ch": "Chapter 5"}, {"id": 357, "py": "bei zi", "pyT": "bēizi", "ph": "bay-dzuh", "zh": "杯子", "en": "cup, glass", "pos": "noun", "sPy": "zhuozi shang you yi ge bei zi", "sPyT": "Zhuōzi shàng yǒu yī ge bēizi.", "sZh": "桌子上有一個杯子。", "sEn": "There is a cup on the table.", "ch": "Chapter 5"}, {"id": 358, "py": "xiang", "pyT": "xiǎng", "ph": "shyahng", "zh": "想", "en": "to want to, to plan to/ to think/ to miss", "pos": "verb", "sPy": "wo xiang mai yi tai xin dianshiji", "sPyT": "Wǒ xiǎng mǎi yī tái xīn diànshìjī.", "sZh": "我想買一台新電視機。", "sEn": "I want to buy a new TV set.", "ch": "Chapter 6"}, {"id": 359, "py": "xin", "pyT": "xīn", "ph": "sheen", "zh": "新", "en": "to be new/ newly", "pos": "state verb", "sPy": "zhe ge zhaoxiangji hen xin", "sPyT": "Zhè ge zhàoxiàngjī hěn xīn.", "sZh": "這個照相機很新。", "sEn": "This camera is very new.", "ch": "Chapter 6"}, {"id": 360, "py": "zhaoxiangji", "pyT": "zhàoxiàngjī", "ph": "jaow-shyahng-jee", "zh": "照相機", "en": "camera", "pos": "noun", "sPy": "wo gege you yi ge xin zhaoxiangji", "sPyT": "Wǒ gēge yǒu yī ge xīn zhàoxiàngjī.", "sZh": "我哥哥有一個新照相機。", "sEn": "My older brother has a new camera.", "ch": "Chapter 6"}, {"id": 361, "py": "zhao", "pyT": "zhào", "ph": "jaow", "zh": "照", "en": "to photograph", "pos": "verb", "sPy": "ta hen xi huan zhao xiang", "sPyT": "Tā hěn xǐhuān zhào xiàng.", "sZh": "他很喜歡照相。", "sEn": "He likes taking photos very much.", "ch": "Chapter 6"}, {"id": 362, "py": "xiangji", "pyT": "xiàngjī", "ph": "shyahng-jee", "zh": "相機", "en": "camera", "pos": "noun", "sPy": "zhe ge xiangji hen pianyi", "sPyT": "Zhè ge xiàngjī hěn piányi.", "sZh": "這個相機很便宜。", "sEn": "This camera is very cheap.", "ch": "Chapter 6"}, {"id": 363, "py": "dianshiji", "pyT": "diànshìjī", "ph": "dyen-shir-jee", "zh": "電視機", "en": "tv set", "pos": "noun", "sPy": "wo jia you yi tai da dianshiji", "sPyT": "Wǒ jiā yǒu yī tái dà diànshìjī.", "sZh": "我家有一台大電視機。", "sEn": "My family has a big TV set.", "ch": "Chapter 6"}, {"id": 364, "py": "qingwen", "pyT": "qǐngwèn", "ph": "ching-wun", "zh": "請問", "en": "excuse me, may I ask?", "pos": "phrase", "sPy": "qingwen zhe ge biao duo shao qian", "sPyT": "Qǐngwèn, zhè ge biǎo duōshao qián?", "sZh": "請問，這個錶多少錢？", "sEn": "Excuse me, how much is this watch?", "ch": "Chapter 6"}, {"id": 365, "py": "wen", "pyT": "wèn", "ph": "wun", "zh": "問", "en": "to ask", "pos": "verb", "sPy": "wo xiang wen laoshi yi ge wenti", "sPyT": "Wǒ xiǎng wèn lǎoshī yī ge wèntí.", "sZh": "我想問老師一個問題。", "sEn": "I want to ask the teacher a question.", "ch": "Chapter 6"}, {"id": 366, "py": "jiu", "pyT": "jiù", "ph": "jyoh", "zh": "舊", "en": "to be old, to be used", "pos": "state verb", "sPy": "zhe ben shu hen jiu le", "sPyT": "Zhè běn shū hěn jiù le.", "sZh": "這本書很舊了。", "sEn": "This book is very old.", "ch": "Chapter 6"}, {"id": 367, "py": "le", "pyT": "le", "ph": "luh", "zh": "了", "en": "indicate excessiveness, completion of action, change of state,  immenent action", "pos": "particle", "sPy": "wo mai le yi ge xin shouji", "sPyT": "Wǒ mǎi le yī ge xīn shǒujī.", "sZh": "我買了一個新手機。", "sEn": "I bought a new cell phone.", "ch": "Chapter 6"}, {"id": 368, "py": "huo", "pyT": "huò", "ph": "hwoh", "zh": "貨", "en": "goods, products, a commodity", "pos": "noun", "sPy": "zhe jia dian de huo hen hao", "sPyT": "Zhè jiā diàn de huò hěn hǎo.", "sZh": "這家店的貨很好。", "sEn": "The goods at this store are very good.", "ch": "Chapter 6"}, {"id": 369, "py": "juede", "pyT": "juéde", "ph": "jyweh-duh", "zh": "覺得", "en": "to feel, to think", "pos": "verb", "sPy": "wo juede zhe ge xiangji hen gui", "sPyT": "Wǒ juéde zhè ge xiàngjī hěn guì.", "sZh": "我覺得這個相機很貴。", "sEn": "I think this camera is very expensive.", "ch": "Chapter 6"}, {"id": 370, "py": "da", "pyT": "dà", "ph": "dah", "zh": "大", "en": "to be big, to be large", "pos": "state verb", "sPy": "wo de xuexiao hen da", "sPyT": "Wǒ de xuéxiào hěn dà.", "sZh": "我的學校很大。", "sEn": "My school is very big.", "ch": "Chapter 6"}, {"id": 371, "py": "xiao", "pyT": "xiǎo", "ph": "shyaow", "zh": "小", "en": "to be small", "pos": "state verb", "sPy": "zhe zhi mao hen xiao", "sPyT": "Zhè zhī māo hěn xiǎo.", "sZh": "這隻貓很小。", "sEn": "This cat is very small.", "ch": "Chapter 6"}, {"id": 372, "py": "qian", "pyT": "qiān", "ph": "chyen", "zh": "千", "en": "thousand", "pos": "numeral", "sPy": "zhe ge xiangji san qian kuai qian", "sPyT": "Zhè ge xiàngjī sān qiān kuài qián.", "sZh": "這個相機三千塊錢。", "sEn": "This camera is three thousand dollars.", "ch": "Chapter 6"}, {"id": 373, "py": "pianyi", "pyT": "piányi", "ph": "pyen-yee", "zh": "便宜", "en": "to be cheap", "pos": "state verb", "sPy": "zhe jia dian de dongxi hen pianyi", "sPyT": "Zhè jiā diàn de dōngxi hěn piányi.", "sZh": "這家店的東西很便宜。", "sEn": "Things at this store are very cheap.", "ch": "Chapter 6"}, {"id": 374, "py": "zhi", "pyT": "zhǐ", "ph": "jir", "zh": "只", "en": "only", "pos": "adverb", "sPy": "wo zhi you yi bai kuai qian", "sPyT": "Wǒ zhǐ yǒu yī bǎi kuài qián.", "sZh": "我只有一百塊錢。", "sEn": "I only have one hundred dollars.", "ch": "Chapter 6"}, {"id": 375, "py": "mai", "pyT": "mài", "ph": "mai", "zh": "賣", "en": "to sell", "pos": "verb", "sPy": "zhe jia dian mai dianshiji ma", "sPyT": "Zhè jiā diàn mài diànshìjī ma?", "sZh": "這家店賣電視機嗎？", "sEn": "Does this store sell TV sets?", "ch": "Chapter 6"}, {"id": 376, "py": "bai", "pyT": "bǎi", "ph": "bai", "zh": "百", "en": "hundred", "pos": "numeral", "sPy": "zhe ben shu liang bai kuai qian", "sPyT": "Zhè běn shū liǎng bǎi kuài qián.", "sZh": "這本書兩百塊錢。", "sEn": "This book is two hundred dollars.", "ch": "Chapter 6"}, {"id": 377, "py": "daxue", "pyT": "dàxué", "ph": "dah-shweh", "zh": "大學", "en": "university", "pos": "noun", "sPy": "wo gege zai Taiwan de daxue nian shu", "sPyT": "Wǒ gēge zài Táiwān de dàxué niàn shū.", "sZh": "我哥哥在台灣的大學唸書。", "sEn": "My older brother studies at a university in Taiwan.", "ch": "Chapter 6"}, {"id": 378, "py": "wan", "pyT": "wàn", "ph": "wahn", "zh": "萬", "en": "ten thousand", "pos": "numeral", "sPy": "zhe tai dianshiji liang wan kuai qian", "sPyT": "Zhè tái diànshìjī liǎng wàn kuài qián.", "sZh": "這台電視機兩萬塊錢。", "sEn": "This TV set is twenty thousand dollars.", "ch": "Chapter 6"}, {"id": 379, "py": "zhidao", "pyT": "zhīdào", "ph": "jir-daow", "zh": "知道", "en": "to know", "pos": "verb", "sPy": "wo bu zhidao ta de mingzi", "sPyT": "Wǒ bù zhīdào tā de míngzi.", "sZh": "我不知道他的名字。", "sEn": "I don't know his name.", "ch": "Chapter 6"}, {"id": 380, "py": "zhen", "pyT": "zhēn", "ph": "jun", "zh": "真", "en": "really", "pos": "level adverb", "sPy": "zhe ge xiangji zhen haokan", "sPyT": "Zhè ge xiàngjī zhēn hǎokàn!", "sZh": "這個相機真好看！", "sEn": "This camera looks really nice!", "ch": "Chapter 6"}, {"id": 381, "py": "xuexiao", "pyT": "xuéxiào", "ph": "shweh-shyaow", "zh": "學校", "en": "school", "pos": "noun", "sPy": "women xuexiao you hen duo xue sheng", "sPyT": "Wǒmen xuéxiào yǒu hěn duō xuéshēng.", "sZh": "我們學校有很多學生。", "sEn": "Our school has many students.", "ch": "Chapter 6"}, {"id": 382, "py": "youming", "pyT": "yǒumíng", "ph": "yoh-ming", "zh": "有名", "en": "famous, well-known", "pos": "state verb", "sPy": "zhe suo daxue hen youming", "sPyT": "Zhè suǒ dàxué hěn yǒumíng.", "sZh": "這所大學很有名。", "sEn": "This university is very famous.", "ch": "Chapter 6"}, {"id": 383, "py": "yi", "pyT": "yì", "ph": "ee", "zh": "億", "en": "hundred million", "pos": "numeral", "sPy": "zhe jia gongsi you yi yi kuai qian", "sPyT": "Zhè jiā gōngsī yǒu yī yì kuài qián.", "sZh": "這家公司有一億塊錢。", "sEn": "This company has one hundred million dollars.", "ch": "Chapter 6"}, {"id": 384, "py": "biao", "pyT": "biǎo", "ph": "byaow", "zh": "錶", "en": "watch", "pos": "noun", "sPy": "wo baba mai le yi zhi xin biao", "sPyT": "Wǒ bàba mǎi le yī zhī xīn biǎo.", "sZh": "我爸爸買了一隻新錶。", "sEn": "My dad bought a new watch.", "ch": "Chapter 6"}, {"id": 385, "py": "gou", "pyT": "gòu", "ph": "goh", "zh": "夠", "en": "to be enough", "pos": "state verb", "sPy": "wo de qian bu gou mai zhaoxiangji", "sPyT": "Wǒ de qián bù gòu mǎi zhàoxiàngjī.", "sZh": "我的錢不夠買照相機。", "sEn": "My money is not enough to buy a camera.", "ch": "Chapter 6"}];
+
+    const TONE_META = {
+      1: {
+        num: 1,
+        label: "1st Tone",
+        shortLabel: "1st",
+        mark: "ˉ",
+        desc: "High & Flat (55)",
+        svg: '<svg class="tone-contour-svg" viewBox="0 0 44 26" fill="none" aria-hidden="true"><line x1="6" y1="6" x2="38" y2="6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
+      },
+      2: {
+        num: 2,
+        label: "2nd Tone",
+        shortLabel: "2nd",
+        mark: "ˊ",
+        desc: "Rising (35)",
+        svg: '<svg class="tone-contour-svg" viewBox="0 0 44 26" fill="none" aria-hidden="true"><path d="M8 20 Q22 15 36 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
+      },
+      3: {
+        num: 3,
+        label: "3rd Tone",
+        shortLabel: "3rd",
+        mark: "ˇ",
+        desc: "Low / Dipping (214)",
+        svg: '<svg class="tone-contour-svg" viewBox="0 0 44 26" fill="none" aria-hidden="true"><path d="M6 14 Q18 24 25 21 T38 11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
+      },
+      4: {
+        num: 4,
+        label: "4th Tone",
+        shortLabel: "4th",
+        mark: "ˋ",
+        desc: "Sharp Falling (51)",
+        svg: '<svg class="tone-contour-svg" viewBox="0 0 44 26" fill="none" aria-hidden="true"><path d="M8 6 L36 21" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
+      },
+      5: {
+        num: 5,
+        label: "Neutral Tone",
+        shortLabel: "Neutral",
+        mark: "˙",
+        desc: "Light & Short",
+        svg: '<svg class="tone-contour-svg" viewBox="0 0 44 26" fill="none" aria-hidden="true"><circle cx="22" cy="14" r="3.5" fill="currentColor"/></svg>'
+      }
+    };
+
+    // State
+    let currentChapter = "ALL";
+    let currentMode = "zh2en";
+    let defaultQuizSize = 10;
+    let quizQueue = [];
+    let quizIndex = 0;
+    let quizComplete = false;
+    let roundHistory = [];
+    let currentItem = null;
+    let currentOptions = [];
+    let currentToneAnswerKey = "";
+    let answered = false;
+    let roundCorrect = 0;
+    let roundAnswered = 0;
+
+    const validVocabIds = new Set(VOCAB.map(v => v.id));
+    const masteredIds = new Set(JSON.parse(localStorage.getItem("zh_mastered") || "[]").filter(id => validVocabIds.has(id)));
+    const reviewIds = new Set(JSON.parse(localStorage.getItem("zh_review") || "[]").filter(id => validVocabIds.has(id)));
+
+    function saveProgress() {
+      localStorage.setItem("zh_mastered", JSON.stringify([...masteredIds]));
+      localStorage.setItem("zh_review", JSON.stringify([...reviewIds]));
+      updateStats();
+    }
+
+    // Audio Engine: Synchronous Taiwanese Mandarin TTS + Web Audio 4-Tone Pitch Contour Fallback
+    let availableVoices = [];
+    let selectedVoice = null;
+    let audioCtx = null;
+    let speechWatchdog = null;
+    window.__utterancePool = [];
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function detectTone(syllable) {
+      if (/[āēīōūǖĀĒĪŌŪǕ]/.test(syllable)) return 1;
+      if (/[áéíóúǘÁÉÍÓÚǗ]/.test(syllable)) return 2;
+      if (/[ǎěǐǒǔǚǍĚǏǑǓǙ]/.test(syllable)) return 3;
+      if (/[àèìòùǜÀÈÌÒÙǛ]/.test(syllable)) return 4;
+      return 5;
+    }
+
+    function extractSyllables(pyT) {
+      if (!pyT || pyT.includes("/")) return [];
+      const cleaned = pyT.replace(/[.,!?'’]/g, " ").trim();
+      const sylRe = /[bcdfghjklmnpqrstwxyz]*[aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+(?:ng|n|r(?![aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]))?/gi;
+      const syllables = [];
+      for (const chunk of cleaned.split(/\s+/)) {
+        const parts = chunk.match(sylRe);
+        if (parts) syllables.push(...parts);
+      }
+      return syllables;
+    }
+
+    function getItemTones(item) {
+      const syls = extractSyllables(item.pyT);
+      return syls.map(detectTone);
+    }
+
+    function formatTonePattern(tones) {
+      if (tones.length === 1) {
+        const meta = TONE_META[tones[0]];
+        return `${meta.label} (${meta.mark})`;
+      }
+      return tones.map(t => `${TONE_META[t].shortLabel} (${TONE_META[t].mark})`).join(" + ");
+    }
+
+    function playToneContourFallback(pinyinWithTones, btnEl) {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+
+      const syllables = extractSyllables((pinyinWithTones || "nǐ hǎo").replace(/\//g, " "));
+
+      if (btnEl) {
+        btnEl.classList.add("speaking");
+        setTimeout(() => btnEl.classList.remove("speaking"), Math.max(450, syllables.length * 260));
+      }
+
+      const now = ctx.currentTime + 0.01;
+      syllables.forEach((syl, idx) => {
+        const tone = detectTone(syl);
+        const start = now + idx * 0.25;
+        const dur = 0.20;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+
+        if (tone === 1) {
+          osc.frequency.setValueAtTime(330, start);
+          osc.frequency.linearRampToValueAtTime(330, start + dur);
+        } else if (tone === 2) {
+          osc.frequency.setValueAtTime(230, start);
+          osc.frequency.exponentialRampToValueAtTime(340, start + dur);
+        } else if (tone === 3) {
+          osc.frequency.setValueAtTime(220, start);
+          osc.frequency.linearRampToValueAtTime(165, start + dur * 0.55);
+          osc.frequency.linearRampToValueAtTime(245, start + dur);
+        } else if (tone === 4) {
+          osc.frequency.setValueAtTime(360, start);
+          osc.frequency.exponentialRampToValueAtTime(175, start + dur);
+        } else {
+          osc.frequency.setValueAtTime(250, start);
+          osc.frequency.linearRampToValueAtTime(220, start + dur);
+        }
+
+        gain.gain.setValueAtTime(0.001, start);
+        gain.gain.linearRampToValueAtTime(0.18, start + 0.025);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + dur + 0.02);
+      });
+    }
+
+    function rankVoice(v) {
+      const lang = (v.lang || "").toLowerCase();
+      const name = (v.name || "").toLowerCase();
+      if (lang === "zh-tw" || lang === "cmn-hant-tw") return 100;
+      if (name.includes("taiwan") || name.includes("meijia") || name.includes("hsiaochen") || name.includes("hsiaoyu") || name.includes("yunjhe") || name.includes("國語")) return 95;
+      if (lang.startsWith("zh-hant") || lang === "zh-hk") return 80;
+      if (lang.startsWith("zh") || lang.startsWith("cmn")) return 70;
+      return 0;
+    }
+
+    function loadVoices() {
+      const select = document.getElementById("voiceSelect");
+      const pill = document.getElementById("audioStatusPill");
+
+      if (!("speechSynthesis" in window)) {
+        pill.textContent = "⚠ Tone Synth Fallback Active (Speech API unavailable)";
+        pill.className = "status-pill fallback";
+        select.innerHTML = '<option value="">Tone Synth Fallback</option>';
+        return;
+      }
+
+      const raw = window.speechSynthesis.getVoices() || [];
+      const zhVoices = raw
+        .map(v => ({ v, score: rankVoice(v) }))
+        .filter(x => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(x => x.v);
+
+      availableVoices = zhVoices.length > 0 ? zhVoices : raw;
+
+      if (zhVoices.length > 0) {
+        selectedVoice = zhVoices[0];
+        pill.textContent = `✓ Taiwanese Voice Ready (${selectedVoice.name})`;
+        pill.className = "status-pill";
+      } else if (raw.length > 0) {
+        selectedVoice = raw[0];
+        pill.textContent = "⚠ No Chinese OS voice found — Tone Synth + System Fallback";
+        pill.className = "status-pill fallback";
+      } else {
+        pill.textContent = "⚠ Tone Synth Ready (Open .html in Chrome/Safari for full TTS voice)";
+        pill.className = "status-pill fallback";
+      }
+
+      const prevVal = select.value;
+      select.innerHTML = "";
+      if (availableVoices.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Built-in Tone Synth";
+        select.appendChild(opt);
+      } else {
+        availableVoices.forEach((v, i) => {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = `${v.name} (${v.lang})`;
+          select.appendChild(opt);
+        });
+        if (prevVal && availableVoices[parseInt(prevVal, 10)]) {
+          select.value = prevVal;
+          selectedVoice = availableVoices[parseInt(prevVal, 10)];
+        }
+        select.onchange = () => {
+          const idx = parseInt(select.value, 10);
+          if (!isNaN(idx)) selectedVoice = availableVoices[idx];
+        };
+      }
+    }
+
+    function clearSpeakingIndicators() {
+      document.querySelectorAll(".speaking").forEach(el => el.classList.remove("speaking"));
+    }
+
+    function speakMandarin(zhText, fallbackPinyin, btnEl) {
+      getAudioCtx();
+      clearSpeakingIndicators();
+      if (speechWatchdog) {
+        clearTimeout(speechWatchdog);
+        speechWatchdog = null;
+      }
+
+      const cleanText = (zhText || "").replace(/\s*\/\s*/g, "，");
+      if (!("speechSynthesis" in window)) {
+        playToneContourFallback(fallbackPinyin, btnEl);
+        return;
+      }
+
+      try {
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+          window.speechSynthesis.cancel();
+        }
+      } catch (e) {}
+
+      let started = false;
+      const utt = new SpeechSynthesisUtterance(cleanText);
+      utt.lang = "zh-TW";
+      utt.rate = 0.88;
+      utt.pitch = 1.0;
+      if (selectedVoice && rankVoice(selectedVoice) > 0) {
+        utt.voice = selectedVoice;
+      }
+
+      window.__utterancePool.push(utt);
+      if (window.__utterancePool.length > 8) window.__utterancePool.shift();
+
+      utt.onstart = () => {
+        started = true;
+        if (btnEl) btnEl.classList.add("speaking");
+      };
+      utt.onend = () => {
+        if (btnEl) btnEl.classList.remove("speaking");
+      };
+      utt.onerror = () => {
+        if (btnEl) btnEl.classList.remove("speaking");
+        if (!started) {
+          started = true;
+          playToneContourFallback(fallbackPinyin, btnEl);
+        }
+      };
+
+      try {
+        window.speechSynthesis.speak(utt);
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (err) {
+        started = true;
+        playToneContourFallback(fallbackPinyin, btnEl);
+        return;
+      }
+
+      speechWatchdog = setTimeout(() => {
+        if (!started && !window.speechSynthesis.speaking) {
+          started = true;
+          playToneContourFallback(fallbackPinyin, btnEl);
+        }
+      }, 650);
+    }
+
+    function testAudio() {
+      speakMandarin("你好，歡迎學習中文！", "nǐ hǎo", document.getElementById("btnTestAudio"));
+    }
+
+    // Deck Filtering
+    function getFilteredDeck() {
+      let base = VOCAB;
+      if (currentChapter === "REVIEW") {
+        const list = VOCAB.filter(x => reviewIds.has(x.id));
+        base = list.length > 0 ? list : VOCAB;
+      } else if (currentChapter !== "ALL") {
+        base = VOCAB.filter(x => x.ch === currentChapter);
+      }
+
+      if (currentMode === "tone") {
+        const scope = document.getElementById("toneScopeSelect")?.value || "single";
+        const validToneItems = base.filter(x => getItemTones(x).length > 0);
+        if (scope === "single") {
+          const singles = validToneItems.filter(x => getItemTones(x).length === 1);
+          return singles.length >= 4 ? singles : validToneItems;
+        }
+        return validToneItems;
+      }
+
+      return base;
+    }
+
+    function getTopicDisplayName() {
+      if (currentChapter === "ALL") return "All Chapters";
+      if (currentChapter === "REVIEW") {
+        return reviewIds.size > 0 ? "Needs Review" : "All Chapters (No Flagged Items)";
+      }
+      return currentChapter;
+    }
+
+    function buildChapterPills() {
+      const chapters = ["ALL", "Lesson", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5", "Chapter 6", "REVIEW"];
+      const container = document.getElementById("chapterPills");
+      container.innerHTML = "";
+      chapters.forEach(ch => {
+        const count = ch === "ALL"
+          ? VOCAB.length
+          : ch === "REVIEW"
+            ? reviewIds.size
+            : VOCAB.filter(x => x.ch === ch).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pill" + (currentChapter === ch ? " active" : "");
+        btn.textContent = ch === "ALL"
+          ? `All (${count})`
+          : ch === "REVIEW"
+            ? `Needs Review (${count})`
+            : `${ch} (${count})`;
+        btn.onclick = () => {
+          currentChapter = ch;
+          buildChapterPills();
+          if (currentMode === "dict") {
+            updateStats();
+            renderDict();
+          } else {
+            startNewQuiz();
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function updateStats() {
+      const pool = getFilteredDeck();
+      const totalInRound = quizQueue.length || Math.min(defaultQuizSize, pool.length);
+      document.getElementById("statDeck").textContent = pool.length;
+      document.getElementById("statQuizCap").textContent = currentMode === "tone"
+        ? `${totalInRound}-question tone quiz`
+        : `${totalInRound}-question random quiz`;
+      document.getElementById("statProgress").textContent = quizComplete
+        ? `${totalInRound} / ${totalInRound}`
+        : `${Math.min(quizIndex + 1, totalInRound)} / ${totalInRound}`;
+      document.getElementById("statMastered").textContent = masteredIds.size;
+      document.getElementById("statReview").textContent = reviewIds.size;
+      document.getElementById("statScore").textContent = `${roundCorrect} / ${roundAnswered}`;
+    }
+
+    function updateModeToolbar() {
+      const isTone = currentMode === "tone";
+      document.getElementById("pinyinHintWrap").classList.toggle("hidden", isTone);
+      document.getElementById("tonePinyinWrap").classList.toggle("hidden", !isTone);
+      document.getElementById("toneCharHintWrap").classList.toggle("hidden", !isTone);
+      document.getElementById("toneAutoPlayWrap").classList.toggle("hidden", !isTone);
+      document.getElementById("toneScopeSelect").classList.toggle("hidden", !isTone);
+      document.getElementById("shortcutKeyRange").textContent = isTone ? "1–5" : "1–4";
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll(".mode-tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+      const isQuiz = mode === "zh2en" || mode === "en2zh" || mode === "tone";
+      document.getElementById("viewQuiz").classList.toggle("hidden", !isQuiz);
+      document.getElementById("viewDict").classList.toggle("hidden", mode !== "dict");
+      updateModeToolbar();
+
+      if (mode === "dict") {
+        updateStats();
+        renderDict();
+      } else {
+        startNewQuiz();
+      }
+    }
+
+    function changeQuizSize() {
+      const val = document.getElementById("quizSizeSelect").value;
+      defaultQuizSize = val === "ALL" ? 9999 : parseInt(val, 10) || 10;
+      startNewQuiz();
+    }
+
+    // Quiz Logic (Default 10 Random Questions from Topic)
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildToneOptions(item) {
+      const tones = getItemTones(item);
+      currentToneAnswerKey = tones.join("-");
+
+      if (tones.length === 1) {
+        // Always present Tones 1-5 in fixed order so keys 1-5 match 1st-4th & Neutral tone
+        return [1, 2, 3, 4, 5].map(t => ({
+          key: String(t),
+          tones: [t],
+          isSingle: true
+        }));
+      }
+
+      // Multi-syllable tone pattern options (4 distinct choices)
+      const len = tones.length;
+      const candidateSet = new Map();
+      candidateSet.set(currentToneAnswerKey, tones);
+
+      // Pull real patterns of the same syllable count from VOCAB first
+      const sameLenPatterns = shuffle(
+        VOCAB.map(getItemTones).filter(arr => arr.length === len)
+      );
+      for (const pat of sameLenPatterns) {
+        if (candidateSet.size >= 4) break;
+        const k = pat.join("-");
+        if (!candidateSet.has(k)) candidateSet.set(k, pat);
+      }
+
+      // Fill any remaining slots with synthetic valid tone combinations (1..4)
+      let guard = 0;
+      while (candidateSet.size < 4 && guard < 100) {
+        guard++;
+        const synth = Array.from({ length: len }, () => Math.floor(Math.random() * 4) + 1);
+        const k = synth.join("-");
+        if (!candidateSet.has(k)) candidateSet.set(k, synth);
+      }
+
+      return shuffle([...candidateSet.entries()]).map(([key, arr]) => ({
+        key,
+        tones: arr,
+        isSingle: false
+      }));
+    }
+
+    function startNewQuiz() {
+      const pool = getFilteredDeck();
+      const targetLen = Math.min(defaultQuizSize, pool.length);
+      quizQueue = shuffle(pool).slice(0, targetLen);
+      quizIndex = 0;
+      quizComplete = false;
+      roundHistory = [];
+      roundCorrect = 0;
+      roundAnswered = 0;
+
+      document.getElementById("quizActiveContainer").classList.remove("hidden");
+      document.getElementById("quizSummaryContainer").classList.add("hidden");
+      loadCurrentQuizQuestion();
+    }
+
+    function loadCurrentQuizQuestion() {
+      if (quizIndex >= quizQueue.length) {
+        showQuizSummary();
+        return;
+      }
+      currentItem = quizQueue[quizIndex];
+      answered = false;
+
+      if (currentMode === "tone") {
+        currentOptions = buildToneOptions(currentItem);
+      } else {
+        const distractors = shuffle(
+          VOCAB.filter(x => x.id !== currentItem.id && x.zh !== currentItem.zh && x.en.toLowerCase() !== currentItem.en.toLowerCase())
+        ).slice(0, 3);
+        currentOptions = shuffle([currentItem, ...distractors]);
+      }
+
+      document.getElementById("feedbackBox").classList.remove("show");
+      const flagBtn = document.getElementById("btnFlagReview");
+      flagBtn.textContent = "Flag for Review";
+      flagBtn.disabled = false;
+
+      const nextBtn = document.getElementById("btnNextQuestion");
+      const isLast = quizIndex === quizQueue.length - 1;
+      nextBtn.innerHTML = isLast
+        ? 'Finish Quiz <kbd>Space</kbd> / <kbd>→</kbd>'
+        : 'Next Question <kbd>Space</kbd> / <kbd>→</kbd>';
+
+      updateStats();
+      renderQuiz();
+
+      if (currentMode === "tone" && document.getElementById("toggleAutoPlayTone").checked) {
+        speakCurrentWord();
+      }
+    }
+
+    function nextQuestion() {
+      if (quizComplete) {
+        startNewQuiz();
+        return;
+      }
+      if (!answered) return;
+      quizIndex++;
+      loadCurrentQuizQuestion();
+    }
+
+    function showQuizSummary() {
+      quizComplete = true;
+      updateStats();
+      document.getElementById("quizActiveContainer").classList.add("hidden");
+      document.getElementById("quizSummaryContainer").classList.remove("hidden");
+
+      const total = quizQueue.length;
+      const pct = total > 0 ? Math.round((roundCorrect / total) * 100) : 0;
+      document.getElementById("summaryTopicLabel").textContent = currentMode === "tone"
+        ? `${getTopicDisplayName()} • Listen → Tone`
+        : getTopicDisplayName();
+      document.getElementById("summaryScoreNum").textContent = `${roundCorrect} / ${total}`;
+      document.getElementById("summaryScorePct").textContent = `${pct}% Accuracy`;
+
+      const listEl = document.getElementById("summaryList");
+      listEl.innerHTML = roundHistory.map(entry => {
+        const toneBadge = currentMode === "tone"
+          ? `<span class="tag" style="margin-left:4px;">${formatTonePattern(getItemTones(entry.item))}</span>`
+          : "";
+        return `
+          <div class="summary-row">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <span class="result-badge ${entry.correct ? "pass" : "miss"}">${entry.correct ? "✓ Correct" : "✗ Missed"}</span>
+              <span class="zh" lang="zh-TW" style="font-size:1.55rem; color:var(--near-black);">${entry.item.zh}</span>
+              <div>
+                <div style="font-weight:700; color:var(--near-black);">${entry.item.pyT} — ${entry.item.en} ${toneBadge}</div>
+                <div style="font-size:0.8rem; color:var(--color-neutral-meta);">${entry.item.sZh} (${entry.item.sEn})</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn-sm" onclick='speakMandarin(${JSON.stringify(entry.item.zh)}, ${JSON.stringify(entry.item.pyT)}, this)'>🔊 Word</button>
+              <button type="button" class="btn-sm" onclick='speakMandarin(${JSON.stringify(entry.item.sZh)}, ${JSON.stringify(entry.item.sPyT)}, this)'>🔊 Sent.</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderQuiz() {
+      if (!currentItem) return;
+      document.getElementById("quizProgressTag").textContent = `Question ${quizIndex + 1} of ${quizQueue.length}`;
+      document.getElementById("quizChapterTag").textContent = currentItem.ch;
+      document.getElementById("quizPosTag").textContent = currentItem.pos;
+
+      const promptEl = document.getElementById("quizPromptContent");
+      const grid = document.getElementById("optionsGrid");
+      grid.innerHTML = "";
+      grid.classList.remove("tone-five-grid");
+
+      if (currentMode === "tone") {
+        const tones = getItemTones(currentItem);
+        const showTonelessPinyin = document.getElementById("toggleTonePinyin").checked;
+        const showCharHint = document.getElementById("toggleToneCharHint").checked;
+        const syllableNote = tones.length === 1 ? "1 syllable" : `${tones.length} syllables`;
+
+        if (!answered) {
+          promptEl.innerHTML = `
+            <button type="button" class="tone-listen-badge" onclick="speakCurrentWord()" title="Replay audio" aria-label="Replay audio">🎧</button>
+            ${showTonelessPinyin ? `<div><span class="tone-pinyin-word">${currentItem.py}</span></div>` : ""}
+            <div class="tone-listen-title">${tones.length === 1 ? "Listen &amp; Identify the Tone" : "Listen &amp; Identify the Tone Pattern"}</div>
+            <div class="tone-listen-sub">Listen to the Mandarin audio (${syllableNote}) and select the matching tone below.</div>
+            ${showCharHint ? `<div class="hint-line" style="margin-top:8px;"><span class="zh" lang="zh-TW" style="font-size:1.5rem; margin-right:8px;">${currentItem.zh}</span> (${currentItem.en})</div>` : ""}
+          `;
+        } else {
+          promptEl.innerHTML = `
+            <div class="big-char zh" lang="zh-TW">${currentItem.zh}</div>
+            <div class="hint-line">${currentItem.pyT} (${currentItem.ph}) — ${currentItem.en}</div>
+            <div><span class="tag">${formatTonePattern(tones)}</span></div>
+          `;
+        }
+
+        if (currentOptions.length === 5) {
+          grid.classList.add("tone-five-grid");
+        }
+
+        currentOptions.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "option-btn";
+          btn.disabled = answered;
+
+          if (opt.isSingle) {
+            const meta = TONE_META[opt.tones[0]];
+            btn.innerHTML = `
+              <span class="key">${idx + 1}</span>
+              <div class="tone-opt-body">
+                <div class="tone-opt-title">
+                  <span>${meta.label}</span>
+                  <span class="tone-mark-pill">${meta.mark}</span>
+                </div>
+                <div class="tone-opt-desc">${meta.desc}</div>
+              </div>
+              ${meta.svg}
+            `;
+          } else {
+            const patternTitle = opt.tones.map(t => TONE_META[t].shortLabel).join(" + ");
+            const patternMarks = opt.tones.map(t => TONE_META[t].mark).join(" ");
+            btn.innerHTML = `
+              <span class="key">${idx + 1}</span>
+              <div class="tone-opt-body">
+                <div class="tone-opt-title">
+                  <span>${patternTitle}</span>
+                  <span class="tone-mark-pill">${patternMarks}</span>
+                </div>
+                <div class="tone-opt-desc">${opt.tones.length}-syllable contour</div>
+              </div>
+            `;
+          }
+
+          btn.onclick = () => selectAnswer(opt, btn);
+          grid.appendChild(btn);
+        });
+        return;
+      }
+
+      const showHint = document.getElementById("togglePinyinHint").checked;
+      if (currentMode === "zh2en") {
+        promptEl.innerHTML = `
+          <div class="big-char zh" lang="zh-TW">${currentItem.zh}</div>
+          ${showHint ? `<div class="hint-line">${currentItem.pyT} (${currentItem.ph})</div>` : ""}
+        `;
+      } else {
+        promptEl.innerHTML = `
+          <div class="big-meaning">${currentItem.en}</div>
+          ${showHint ? `<div class="hint-line">${currentItem.pyT} (${currentItem.ph})</div>` : ""}
+        `;
+      }
+
+      currentOptions.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        btn.disabled = answered;
+        btn.innerHTML = currentMode === "zh2en"
+          ? `<span class="key">${idx + 1}</span><span><strong>${opt.en}</strong></span>`
+          : `<span class="key">${idx + 1}</span><span class="opt-zh zh" lang="zh-TW">${opt.zh}</span>`;
+        btn.onclick = () => selectAnswer(opt, btn);
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(chosen, btnEl) {
+      if (answered) return;
+      answered = true;
+      roundAnswered++;
+
+      if (document.activeElement && typeof document.activeElement.blur === "function") {
+        document.activeElement.blur();
+      }
+
+      const isCorrect = currentMode === "tone"
+        ? chosen.key === currentToneAnswerKey
+        : chosen.id === currentItem.id;
+
+      if (isCorrect) {
+        roundCorrect++;
+        masteredIds.add(currentItem.id);
+        reviewIds.delete(currentItem.id);
+      } else {
+        reviewIds.add(currentItem.id);
+      }
+      roundHistory.push({ item: currentItem, correct: isCorrect });
+      saveProgress();
+      buildChapterPills();
+
+      if (currentMode === "tone") {
+        // Re-render prompt area to reveal character, pinyin tone marks & meaning
+        renderQuiz();
+      }
+
+      const buttons = document.querySelectorAll("#optionsGrid .option-btn");
+      currentOptions.forEach((opt, idx) => {
+        buttons[idx].disabled = true;
+        const optIsRight = currentMode === "tone"
+          ? opt.key === currentToneAnswerKey
+          : opt.id === currentItem.id;
+        const optIsChosen = currentMode === "tone"
+          ? opt.key === chosen.key
+          : opt.id === chosen.id;
+
+        if (optIsRight) buttons[idx].classList.add("correct");
+        else if (optIsChosen && !isCorrect) buttons[idx].classList.add("wrong");
+      });
+
+      const fbTitle = document.getElementById("feedbackTitle");
+      if (currentMode === "tone") {
+        const correctToneLabel = formatTonePattern(getItemTones(currentItem));
+        fbTitle.textContent = isCorrect
+          ? `✓ Correct! — ${correctToneLabel}`
+          : `✗ Incorrect — Answer: ${correctToneLabel}`;
+      } else {
+        fbTitle.textContent = isCorrect
+          ? "✓ Correct!"
+          : `✗ Incorrect — Answer: ${currentItem.zh} (${currentItem.en})`;
+      }
+      fbTitle.style.color = isCorrect ? "var(--color-positive-total)" : "var(--color-negative-total)";
+
+      document.getElementById("feedbackMeta").textContent = `${currentItem.zh} • ${currentItem.pyT} (${currentItem.ph}) • ${currentItem.en}`;
+      document.getElementById("fbSentenceZh").textContent = currentItem.sZh;
+      document.getElementById("fbSentencePy").textContent = currentItem.sPyT;
+      document.getElementById("fbSentenceEn").textContent = currentItem.sEn;
+      document.getElementById("feedbackBox").classList.add("show");
+
+      if (currentMode !== "tone") {
+        speakCurrentWord();
+      }
+    }
+
+    function speakCurrentWord() {
+      if (!currentItem) return;
+      speakMandarin(currentItem.zh, currentItem.pyT, document.getElementById("btnPlayWord"));
+    }
+
+    function speakCurrentSentence() {
+      if (!currentItem) return;
+      const fbVisible = document.getElementById("feedbackBox").classList.contains("show");
+      const btn = fbVisible
+        ? document.getElementById("btnPlaySentence")
+        : document.getElementById("btnPromptSentence");
+      speakMandarin(currentItem.sZh, currentItem.sPyT, btn);
+    }
+
+    function markNeedsReview() {
+      if (!currentItem) return;
+      reviewIds.add(currentItem.id);
+      masteredIds.delete(currentItem.id);
+      saveProgress();
+      buildChapterPills();
+      const flagBtn = document.getElementById("btnFlagReview");
+      flagBtn.textContent = "✓ Flagged for Review";
+      flagBtn.disabled = true;
+    }
+
+    // Dictionary Table
+    function renderDict() {
+      const q = (document.getElementById("dictSearch").value || "").trim().toLowerCase();
+      const deck = getFilteredDeck().filter(item =>
+        !q ||
+        item.zh.includes(q) ||
+        item.py.toLowerCase().includes(q) ||
+        item.pyT.toLowerCase().includes(q) ||
+        item.en.toLowerCase().includes(q)
+      );
+
+      const tbody = document.getElementById("dictBody");
+      tbody.innerHTML = deck.map(item => `
+        <tr>
+          <td><button type="button" class="btn-sm" onclick='speakMandarin(${JSON.stringify(item.zh)}, ${JSON.stringify(item.pyT)}, this)'>🔊 Word</button></td>
+          <td class="td-zh zh" lang="zh-TW">${item.zh}</td>
+          <td><strong>${item.pyT}</strong></td>
+          <td style="color:var(--color-neutral-meta);">${item.ph}</td>
+          <td><strong>${item.en}</strong></td>
+          <td><span class="tag neutral">${item.ch}</span></td>
+          <td>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div>
+                <div class="zh" lang="zh-TW" style="font-size:1.15rem;">${item.sZh}</div>
+                <div style="font-size:0.8rem; color:var(--color-neutral-text);">${item.sPyT} — ${item.sEn}</div>
+              </div>
+              <button type="button" class="btn-sm" onclick='speakMandarin(${JSON.stringify(item.sZh)}, ${JSON.stringify(item.sPyT)}, this)'>🔊 Sent.</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Keyboard Shortcuts:
+    // 1-5 = Answer
+    // Up Arrow / A = Hear Word
+    // Down Arrow / S = Hear Sentence
+    // Space / Right Arrow = Next Question (or Start New Quiz on summary screen)
+    // About Modal Controls
+    let lastFocusedBeforeModal = null;
+
+    function isAboutModalOpen() {
+      const modal = document.getElementById("aboutModal");
+      return modal && !modal.classList.contains("hidden");
+    }
+
+    function openAboutModal() {
+      const modal = document.getElementById("aboutModal");
+      if (!modal) return;
+      lastFocusedBeforeModal = document.activeElement;
+      modal.classList.remove("hidden");
+      const closeBtn = document.getElementById("btnCloseAbout");
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeAboutModal() {
+      const modal = document.getElementById("aboutModal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === "function") {
+        lastFocusedBeforeModal.focus();
+      }
+    }
+
+    function handleAboutBackdropClick(event) {
+      if (event.target === event.currentTarget) {
+        closeAboutModal();
+      }
+    }
+
+    document.addEventListener("keydown", e => {
+      if (isAboutModalOpen()) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          closeAboutModal();
+        }
+        return;
+      }
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") return;
+      const keyLower = e.key.toLowerCase();
+
+      if (currentMode === "zh2en" || currentMode === "en2zh" || currentMode === "tone") {
+        if (e.code === "Space" || e.key === "ArrowRight") {
+          e.preventDefault();
+          if (quizComplete || answered) {
+            nextQuestion();
+          }
+        } else if ((e.key === "ArrowUp" || keyLower === "a") && !quizComplete) {
+          e.preventDefault();
+          speakCurrentWord();
+        } else if ((e.key === "ArrowDown" || keyLower === "s") && !quizComplete) {
+          e.preventDefault();
+          speakCurrentSentence();
+        } else if (["1", "2", "3", "4", "5"].includes(e.key) && !answered && !quizComplete) {
+          const idx = parseInt(e.key, 10) - 1;
+          const btns = document.querySelectorAll("#optionsGrid .option-btn");
+          if (btns[idx]) btns[idx].click();
+        }
+      }
+    });
+
+    // Init
+    (function init() {
+      loadVoices();
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        let polls = 0;
+        const timer = setInterval(() => {
+          loadVoices();
+          if (++polls > 12 || availableVoices.length > 0) clearInterval(timer);
+        }, 250);
+      }
+
+      buildChapterPills();
+      startNewQuiz();
+    })();
+  </script>
+</body>
+</html>
